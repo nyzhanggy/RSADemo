@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bzp-sv-mS0">
+                                <rect key="frame" x="281" y="162" width="74" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="模指生成公钥"/>
+                                <connections>
+                                    <action selector="SecKeyCreatPublcKey" destination="BYZ-38-t0r" eventType="touchUpInside" id="aAa-zP-mYA"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M9x-HK-0tO">
+                                <rect key="frame" x="248" y="57" width="107" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="生成密钥(生成模指)"/>
+                                <connections>
+                                    <action selector="SecKeyGenerate" destination="BYZ-38-t0r" eventType="touchUpInside" id="hQa-Wn-MJ7"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G3E-dV-cOZ">
+                                <rect key="frame" x="20" y="92" width="74" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="读取pem公钥"/>
+                                <connections>
+                                    <action selector="opensslReadPublicKeyPEM" destination="BYZ-38-t0r" eventType="touchUpInside" id="TTY-eX-y8F"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YpJ-XN-Ogc">
+                                <rect key="frame" x="20" y="232" width="50" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="私钥解密"/>
+                                <connections>
+                                    <action selector="opensslPrivateKeyDecrypt" destination="BYZ-38-t0r" eventType="touchUpInside" id="gc4-eS-NN8"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="onX-eX-zAi">
+                                <rect key="frame" x="305" y="197" width="50" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="公钥加密"/>
+                                <connections>
+                                    <action selector="SecRefPubcliKeyEncrypt" destination="BYZ-38-t0r" eventType="touchUpInside" id="o1t-uu-zgu"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mxo-Yo-QHK">
+                                <rect key="frame" x="281" y="127" width="74" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="读取pem私钥"/>
+                                <connections>
+                                    <action selector="SecKeyReadPrivateKeyPEM" destination="BYZ-38-t0r" eventType="touchUpInside" id="g2t-vU-rck"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QtL-eN-2uT">
+                                <rect key="frame" x="20" y="127" width="74" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="读取pem私钥"/>
+                                <connections>
+                                    <action selector="opensslReadPrivateeyPEM" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wzg-NJ-HLR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B7g-at-pgs">
+                                <rect key="frame" x="281" y="92" width="74" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="读取pem公钥"/>
+                                <connections>
+                                    <action selector="SecKeyReadPublicKeyPEM" destination="BYZ-38-t0r" eventType="touchUpInside" id="IPF-Dy-5PP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AK8-Ur-bd6">
+                                <rect key="frame" x="305" y="232" width="50" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="私钥解密"/>
+                                <connections>
+                                    <action selector="SecRefPrivateKeyDecrypt" destination="BYZ-38-t0r" eventType="touchUpInside" id="BOX-G8-XFF"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SecKey" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k5b-De-7RW">
+                                <rect key="frame" x="298" y="28" width="57.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J36-Zg-ZDi">
+                                <rect key="frame" x="172" y="230.5" width="31" height="30"/>
+                                <state key="normal" title="重置"/>
+                                <connections>
+                                    <action selector="resetAll:" destination="BYZ-38-t0r" eventType="touchUpInside" id="P17-Of-n15"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="openssl" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ES-V9-Ixb">
+                                <rect key="frame" x="20" y="28" width="59.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fnG-wR-8WL">
+                                <rect key="frame" x="20" y="162" width="74" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="模指生成公钥"/>
+                                <connections>
+                                    <action selector="opensslCreatPublcKey" destination="BYZ-38-t0r" eventType="touchUpInside" id="m0G-Eb-5Zp"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t9S-ew-MJf">
+                                <rect key="frame" x="20" y="197" width="50" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="公钥加密"/>
+                                <connections>
+                                    <action selector="opensslPubcliKeyEncrypt" destination="BYZ-38-t0r" eventType="touchUpInside" id="m97-Iz-lyk"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="log" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DHb-7T-EW5">
+                                <rect key="frame" x="20" y="279" width="335" height="368"/>
+                                <color key="backgroundColor" red="0.99793201679999999" green="0.98813384770000001" blue="0.91720098260000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zKZ-fz-Cbc">
+                                <rect key="frame" x="20" y="57" width="108" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="生成密钥(生成PEM)"/>
+                                <connections>
+                                    <action selector="opensslGenerate" destination="BYZ-38-t0r" eventType="touchUpInside" id="VY1-yA-a7H"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="bzp-sv-mS0" secondAttribute="trailing" constant="20" id="2Kv-5x-6re"/>
+                            <constraint firstItem="YpJ-XN-Ogc" firstAttribute="centerY" secondItem="J36-Zg-ZDi" secondAttribute="centerY" id="64M-yE-zjt"/>
+                            <constraint firstAttribute="trailing" secondItem="mxo-Yo-QHK" secondAttribute="trailing" constant="20" id="AmN-Ix-RvW"/>
+                            <constraint firstItem="zKZ-fz-Cbc" firstAttribute="top" secondItem="2ES-V9-Ixb" secondAttribute="bottom" constant="8" id="ApT-f4-jsH"/>
+                            <constraint firstItem="DHb-7T-EW5" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="EqI-bA-Ipx"/>
+                            <constraint firstItem="J36-Zg-ZDi" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GBG-Rb-AQZ"/>
+                            <constraint firstItem="k5b-De-7RW" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="LJt-0x-sx4"/>
+                            <constraint firstItem="fnG-wR-8WL" firstAttribute="top" secondItem="QtL-eN-2uT" secondAttribute="bottom" constant="8" id="NFP-E2-Kdc"/>
+                            <constraint firstItem="YpJ-XN-Ogc" firstAttribute="top" secondItem="t9S-ew-MJf" secondAttribute="bottom" constant="8" id="RRb-2N-amV"/>
+                            <constraint firstItem="2ES-V9-Ixb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="S8d-PM-sJN"/>
+                            <constraint firstAttribute="trailing" secondItem="AK8-Ur-bd6" secondAttribute="trailing" constant="20" id="Sn6-HS-Tv7"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="DHb-7T-EW5" secondAttribute="bottom" constant="20" id="Vxq-E7-uMQ"/>
+                            <constraint firstItem="2ES-V9-Ixb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="WhF-KU-sTX"/>
+                            <constraint firstAttribute="trailing" secondItem="DHb-7T-EW5" secondAttribute="trailing" constant="20" id="XBZ-C3-r7B"/>
+                            <constraint firstAttribute="trailing" secondItem="k5b-De-7RW" secondAttribute="trailing" constant="20" id="Zjq-GM-q6O"/>
+                            <constraint firstAttribute="trailing" secondItem="B7g-at-pgs" secondAttribute="trailing" constant="20" id="a6M-o8-HOK"/>
+                            <constraint firstItem="QtL-eN-2uT" firstAttribute="top" secondItem="G3E-dV-cOZ" secondAttribute="bottom" constant="8" id="c5f-Hh-ECt"/>
+                            <constraint firstItem="G3E-dV-cOZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="cjX-t9-Rlh"/>
+                            <constraint firstItem="t9S-ew-MJf" firstAttribute="top" secondItem="fnG-wR-8WL" secondAttribute="bottom" constant="8" id="dHh-kd-8RW"/>
+                            <constraint firstAttribute="trailing" secondItem="M9x-HK-0tO" secondAttribute="trailing" constant="20" id="ee2-Eg-xBs"/>
+                            <constraint firstItem="M9x-HK-0tO" firstAttribute="top" secondItem="k5b-De-7RW" secondAttribute="bottom" constant="8" id="fZ8-gD-Hlp"/>
+                            <constraint firstItem="zKZ-fz-Cbc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="hwJ-cM-eWC"/>
+                            <constraint firstItem="fnG-wR-8WL" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="i3L-nq-oDO"/>
+                            <constraint firstItem="DHb-7T-EW5" firstAttribute="top" secondItem="YpJ-XN-Ogc" secondAttribute="bottom" constant="20" id="jFp-vN-4Ri"/>
+                            <constraint firstItem="bzp-sv-mS0" firstAttribute="top" secondItem="mxo-Yo-QHK" secondAttribute="bottom" constant="8" id="jRP-24-RMT"/>
+                            <constraint firstItem="YpJ-XN-Ogc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="jjt-xA-ztz"/>
+                            <constraint firstItem="G3E-dV-cOZ" firstAttribute="top" secondItem="zKZ-fz-Cbc" secondAttribute="bottom" constant="8" id="ngK-T0-Dd5"/>
+                            <constraint firstItem="QtL-eN-2uT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="nyl-rV-Lpp"/>
+                            <constraint firstItem="t9S-ew-MJf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="pZf-S0-PaC"/>
+                            <constraint firstItem="AK8-Ur-bd6" firstAttribute="top" secondItem="onX-eX-zAi" secondAttribute="bottom" constant="8" id="pcf-RJ-gTi"/>
+                            <constraint firstItem="onX-eX-zAi" firstAttribute="top" secondItem="bzp-sv-mS0" secondAttribute="bottom" constant="8" id="pgJ-7d-qLn"/>
+                            <constraint firstItem="mxo-Yo-QHK" firstAttribute="top" secondItem="B7g-at-pgs" secondAttribute="bottom" constant="8" id="phk-D7-l4m"/>
+                            <constraint firstItem="B7g-at-pgs" firstAttribute="top" secondItem="M9x-HK-0tO" secondAttribute="bottom" constant="8" id="sKe-nw-ocG"/>
+                            <constraint firstItem="k5b-De-7RW" firstAttribute="height" secondItem="2ES-V9-Ixb" secondAttribute="height" id="sh0-km-W2t"/>
+                            <constraint firstAttribute="trailing" secondItem="onX-eX-zAi" secondAttribute="trailing" constant="20" id="xdg-5u-NYG"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="logTextView" destination="DHb-7T-EW5" id="xtg-Io-oEO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>
