@@ -9,6 +9,8 @@
 
 + (RSA *)RSAPublicKeyFromBase64:(NSString *)publicKey;
 + (RSA *)RSAPrivateKeyFromBase64:(NSString *)privateKey;
++ (RSA *)RSAPublicKeyFromPEM:(NSString *)publicKeyPEM;
++ (RSA *)RSAPrivateKeyFromPEM:(NSString *)privatePEM;
 
 + (NSString *)PEMFormatPublicKey:(RSA *)publicKey;
 + (NSString *)PEMFormatPrivateKey:(RSA *)privateKey;

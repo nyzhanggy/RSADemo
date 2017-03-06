@@ -21,6 +21,18 @@
 	return NO;
 }
 
++ (RSA *)RSAPublicKeyFromPEM:(NSString *)publicKeyPEM
+{
+	const char *buffer = [publicKeyPEM UTF8String];
+	
+	BIO *bpubkey = BIO_new_mem_buf(buffer, (int)strlen(buffer));
+	
+	RSA *rsaPublic = PEM_read_bio_RSA_PUBKEY(bpubkey, NULL, NULL, NULL);
+	
+	BIO_free_all(bpubkey);
+	return rsaPublic;
+}
+
 + (RSA *)RSAPublicKeyFromBase64:(NSString *)publicKey
 {
 	//格式化公钥
@@ -40,16 +52,9 @@
 		}
 	}
 	[result appendString:@"\n-----END PUBLIC KEY-----"];
-
-	const char *buffer = [result UTF8String];
 	
-	BIO *bpubkey = BIO_new_mem_buf(buffer, (int)strlen(buffer));
+	return [self RSAPublicKeyFromPEM:result];
 	
-	RSA *rsaPublic = PEM_read_bio_RSA_PUBKEY(bpubkey, NULL, NULL, NULL);
-		
-	BIO_free_all(bpubkey);
-	return rsaPublic;
-
 }
 
 + (RSA *)RSAPrivateKeyFromBase64:(NSString *)privateKey
@@ -76,16 +81,19 @@
 		index++;
 	}
 	[result appendString:@"\n-----END RSA PRIVATE KEY-----"];
+	return [self RSAPrivateKeyFromPEM:result];
 	
-	const char *buffer = [result UTF8String];
+}
++ (RSA *)RSAPrivateKeyFromPEM:(NSString *)privatePEM {
+	
+	const char *buffer = [privatePEM UTF8String];
 	
 	BIO *bpubkey = BIO_new_mem_buf(buffer, (int)strlen(buffer));
-		
+	
 	RSA *rsaPrivate = PEM_read_bio_RSAPrivateKey(bpubkey, NULL, NULL, NULL);
 	BIO_free_all(bpubkey);
 	return rsaPrivate;
 }
-
 
 + (NSString *)PEMFormatPublicKey:(RSA *)publicKey
 {	
