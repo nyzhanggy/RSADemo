@@ -155,7 +155,7 @@
 			memset(publicEncrypt, 0, publicRSALength);
 			const unsigned char *str = [dataSegment bytes];
 			
-			if(RSA_public_encrypt(blockSize,str,(unsigned char*)publicEncrypt,publicKey,RSA_PKCS1_PADDING)>=0){
+			if(RSA_public_encrypt(dataSegmentRealSize,str,(unsigned char*)publicEncrypt,publicKey,RSA_PKCS1_PADDING)>=0){
 				NSData *encryptData = [[NSData alloc] initWithBytes:publicEncrypt length:publicEncryptSize];
 				[encryptDate appendData:encryptData];
 			}
