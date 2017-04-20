@@ -20,6 +20,8 @@
 + (NSData *)encryptWithPublicKey:(RSA *)publicKey plainData:(NSData *)plainData;
 + (NSData *)decryptWithPrivateKey:(RSA *)privateKey cipherData:(NSData *)cipherData;
 
++ (NSData *)encryptWithPrivateRSA:(RSA *)privateKey plainData:(NSData *)plainData;
++ (NSData *)decryptWithPublicKey:(RSA *)publicKey cipherData:(NSData *)cipherData;
 #pragma mark - SecKeyRef
 + (BOOL)generateSecKeyPairWithKeySize:(NSUInteger)keySize publicKeyRef:(SecKeyRef *)publicKeyRef privateKeyRef:(SecKeyRef *)privateKeyRef;
 

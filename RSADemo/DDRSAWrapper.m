@@ -6,6 +6,8 @@
 #import <openssl/pem.h>
 
 @implementation DDRSAWrapper
+#pragma mark - openssl
+#pragma mark ---生成密钥对
 + (BOOL)generateRSAKeyPairWithKeySize:(int)keySize publicKey:(RSA **)publicKey privateKey:(RSA **)privateKey {
 	if (keySize == 512 || keySize == 1024 || keySize == 2048) {
 		RSA *rsa = RSA_generate_key(keySize,RSA_F4,NULL,NULL);
@@ -20,7 +22,7 @@
 	
 	return NO;
 }
-
+#pragma mark ---密钥格式转换
 + (RSA *)RSAPublicKeyFromPEM:(NSString *)publicKeyPEM
 {
 	const char *buffer = [publicKeyPEM UTF8String];
@@ -198,6 +200,52 @@
 	return nil;
 }
 
++ (NSData *)encryptWithPrivateRSA:(RSA *)privateKey plainData:(NSData *)plainData {
+    int privateRSALength = RSA_size(privateKey);
+    double totalLength = [plainData length];
+    int blockSize = privateRSALength - 11;
+    int blockCount = ceil(totalLength / blockSize);
+    size_t privateEncryptSize = privateRSALength;
+    NSMutableData *encryptDate = [NSMutableData data];
+    for (int i = 0; i < blockCount; i++) {
+        NSUInteger loc = i * blockSize;
+        int dataSegmentRealSize = MIN(blockSize, totalLength - loc);
+        NSData *dataSegment = [plainData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
+        char *publicEncrypt = malloc(privateRSALength);
+        memset(publicEncrypt, 0, privateRSALength);
+        const unsigned char *str = [dataSegment bytes];
+        if(RSA_private_encrypt(dataSegmentRealSize,str,(unsigned char*)publicEncrypt,privateKey,RSA_PKCS1_PADDING)>=0){
+            NSData *encryptData = [[NSData alloc] initWithBytes:publicEncrypt length:privateEncryptSize];
+            [encryptDate appendData:encryptData];
+        }
+        free(publicEncrypt);
+    }
+    return encryptDate;
+
+}
+
++ (NSData *)decryptWithPublicKey:(RSA *)publicKey cipherData:(NSData *)cipherData {
+    int publicRSALenght = RSA_size(publicKey);
+    double totalLength = [cipherData length];
+    int blockSize = publicRSALenght;
+    int blockCount = ceil(totalLength / blockSize);
+    NSMutableData *decrypeData = [NSMutableData data];
+    for (int i = 0; i < blockCount; i++) {
+        NSUInteger loc = i * blockSize;
+        long dataSegmentRealSize = MIN(blockSize, totalLength - loc);
+        NSData *dataSegment = [cipherData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
+        const unsigned char *str = [dataSegment bytes];
+        unsigned char *privateDecrypt = malloc(publicRSALenght);
+        memset(privateDecrypt, 0, publicRSALenght);
+        if(RSA_public_decrypt(publicRSALenght,str,privateDecrypt,publicKey,RSA_PKCS1_PADDING)>=0){
+            NSInteger length =strlen((char *)privateDecrypt);
+            NSData *data = [[NSData alloc] initWithBytes:privateDecrypt length:length];
+            [decrypeData appendData:data];
+        }
+        free(privateDecrypt);
+    }
+    return decrypeData;
+}
 
 #pragma mark - SecKeyRef
 #pragma mark ---生成密钥对
@@ -419,7 +467,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 }
 
 
-#pragma mark 获取公钥具体信息
+#pragma mark - 公钥与模数和指数转换
 //公钥指数
 + (NSData *)getPublicKeyExp:(NSData *)pk {
 

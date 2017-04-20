@@ -22,7 +22,7 @@
 	
 	NSData *_modData;
 	NSData *_expData;
-	
+    
 }
 @property (weak, nonatomic) IBOutlet UITextView *logTextView;
 
@@ -34,7 +34,7 @@
 	[super viewDidLoad];
 	
 	
-	_plainString = @"电视剧啊看见的看撒娇的就撒了的撒的距离撒到家啦手机丢了撒娇的拉萨加点辣椒的撒的家啊时间到啦数据来看电视剧啊看见的看撒娇的就撒了的撒的距离撒到家啦手机丢了撒娇的拉萨加点辣椒的撒的家啊时间到啦数据来看电视剧啊看见的看撒娇的就撒了的撒的距离撒到家啦手机丢了撒娇的拉萨加点辣椒的撒的家啊时间到啦数据来看电视剧啊看见的看撒娇的就撒了的撒的距离撒到家啦手机丢了撒娇的拉萨加点辣椒的撒的家啊时间到啦数据来看电视剧啊看见的看撒娇的就撒了的撒的距离撒到家啦手机丢了撒娇的拉萨加点辣椒的撒的家啊时间到啦数据来看";
+	_plainString = @"电视剧1234567890qwertyuiop[]asdfghjkl;'zxcvbnm,./`!@#$%^&*()_+=-";
 }
 - (IBAction)resetAll:(id)sender {
 	publicKey = nil;
@@ -239,10 +239,51 @@
 		NSString *logText = [NSString stringWithFormat:@"SecKey 私钥解密失败"];
 		[self addlogText:logText];
 	}
-	
-	
-	
+
 }
+- (IBAction)opensslPrivateEncrypt:(id)sender {
+    if(!privateKey) {
+        [self addlogText:@"无RSA私钥"];
+        return;
+    }
+    
+    if (!_plainString) {
+        [self addlogText:@"无明文数据"];
+        return;
+    }
+    NSData *plainData = [_plainString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSData *cipherData = [DDRSAWrapper encryptWithPrivateRSA:privateKey plainData:plainData];
+    _cipherString = [cipherData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    NSString *logText = [NSString stringWithFormat:@"SecKey 公钥加密：\n%@",_cipherString];
+    [self addlogText:logText];
+
+}
+- (IBAction)opensslPublicKeyDecrypt:(id)sender {
+
+    if(!publicKey) {
+        [self addlogText:@"无RSA公钥"];
+        return;
+    }
+    
+    if (!_cipherString) {
+        [self addlogText:@"无密文数据"];
+        return;
+    }
+    
+    NSData *cipherData = [[NSData alloc] initWithBase64EncodedString:_cipherString options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *plainData = [DDRSAWrapper decryptWithPublicKey:publicKey cipherData:cipherData];
+    NSString *outputPlainString = [[NSString alloc] initWithData:plainData encoding:NSUTF8StringEncoding];
+    if ([outputPlainString isEqualToString:_plainString]) {
+        NSString *logText = [NSString stringWithFormat:@"SecKey 私钥解密成功：\n%@",outputPlainString];
+        [self addlogText:logText];
+    } else {
+        NSString *logText = [NSString stringWithFormat:@"SecKey 私钥解密失败"];
+        [self addlogText:logText];
+    }
+    
+}
+
 - (void)addlogText:(NSString *)text {
 	NSString *logText = [NSString stringWithFormat:@"%@\n%@\n",self.logTextView.text,text];
 	self.logTextView.text = logText;
