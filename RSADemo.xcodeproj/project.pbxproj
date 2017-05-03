@@ -13,7 +13,7 @@
 		1598A55C1E6961B30031D3A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1598A55A1E6961B30031D3A3 /* Main.storyboard */; };
 		1598A55E1E6961B30031D3A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1598A55D1E6961B30031D3A3 /* Assets.xcassets */; };
 		1598A5611E6961B30031D3A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1598A55F1E6961B30031D3A3 /* LaunchScreen.storyboard */; };
-		1598A56D1E6965AD0031D3A3 /* DDRSAWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1598A56C1E6965AD0031D3A3 /* DDRSAWrapper.m */; };
+		15E34EA91EB9DC8900C749FA /* DDRSAWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E34EA81EB9DC8900C749FA /* DDRSAWrapper.m */; };
 		E87247D95CC0A4135CD59068 /* libPods-RSADemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C596D62BE0A6A4E17AB1DCF2 /* libPods-RSADemo.a */; };
 /* End PBXBuildFile section */
 
@@ -28,8 +28,8 @@
 		1598A55D1E6961B30031D3A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1598A5601E6961B30031D3A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1598A5621E6961B30031D3A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1598A56B1E6965AD0031D3A3 /* DDRSAWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDRSAWrapper.h; sourceTree = "<group>"; };
-		1598A56C1E6965AD0031D3A3 /* DDRSAWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDRSAWrapper.m; sourceTree = "<group>"; };
+		15E34EA71EB9DC8900C749FA /* DDRSAWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDRSAWrapper.h; sourceTree = "<group>"; };
+		15E34EA81EB9DC8900C749FA /* DDRSAWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDRSAWrapper.m; sourceTree = "<group>"; };
 		34B9001EB4200D5FA6DC1E45 /* Pods-RSADemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSADemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-RSADemo/Pods-RSADemo.release.xcconfig"; sourceTree = "<group>"; };
 		ABF24BEA1929FC1D1189FF5A /* Pods-RSADemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSADemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RSADemo/Pods-RSADemo.debug.xcconfig"; sourceTree = "<group>"; };
 		C596D62BE0A6A4E17AB1DCF2 /* libPods-RSADemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RSADemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,8 +68,7 @@
 		1598A5501E6961B30031D3A3 /* RSADemo */ = {
 			isa = PBXGroup;
 			children = (
-				1598A56B1E6965AD0031D3A3 /* DDRSAWrapper.h */,
-				1598A56C1E6965AD0031D3A3 /* DDRSAWrapper.m */,
+				15E34EA61EB9DC8900C749FA /* DDRSAWrapper */,
 				1598A5541E6961B30031D3A3 /* AppDelegate.h */,
 				1598A5551E6961B30031D3A3 /* AppDelegate.m */,
 				1598A5571E6961B30031D3A3 /* ViewController.h */,
@@ -89,6 +88,15 @@
 				1598A5521E6961B30031D3A3 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		15E34EA61EB9DC8900C749FA /* DDRSAWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				15E34EA71EB9DC8900C749FA /* DDRSAWrapper.h */,
+				15E34EA81EB9DC8900C749FA /* DDRSAWrapper.m */,
+			);
+			path = DDRSAWrapper;
 			sourceTree = "<group>";
 		};
 		3F3470F49938D079CE42E444 /* Pods */ = {
@@ -230,7 +238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1598A56D1E6965AD0031D3A3 /* DDRSAWrapper.m in Sources */,
+				15E34EA91EB9DC8900C749FA /* DDRSAWrapper.m in Sources */,
 				1598A5591E6961B30031D3A3 /* ViewController.m in Sources */,
 				1598A5561E6961B30031D3A3 /* AppDelegate.m in Sources */,
 				1598A5531E6961B30031D3A3 /* main.m in Sources */,
