@@ -23,8 +23,7 @@
 	return NO;
 }
 #pragma mark ---密钥格式转换
-+ (RSA *)RSAPublicKeyFromPEM:(NSString *)publicKeyPEM
-{
++ (RSA *)RSAPublicKeyFromPEM:(NSString *)publicKeyPEM {
 	const char *buffer = [publicKeyPEM UTF8String];
 	
 	BIO *bpubkey = BIO_new_mem_buf(buffer, (int)strlen(buffer));
@@ -35,8 +34,7 @@
 	return rsaPublic;
 }
 
-+ (RSA *)RSAPublicKeyFromBase64:(NSString *)publicKey
-{
++ (RSA *)RSAPublicKeyFromBase64:(NSString *)publicKey {
 	//格式化公钥
 	NSMutableString *result = [NSMutableString string];
 	[result appendString:@"-----BEGIN PUBLIC KEY-----\n"];
@@ -59,8 +57,7 @@
 	
 }
 
-+ (RSA *)RSAPrivateKeyFromBase64:(NSString *)privateKey
-{
++ (RSA *)RSAPrivateKeyFromBase64:(NSString *)privateKey {
 	//格式化私钥
 	const char *pstr = [privateKey UTF8String];
 	int len = (int)[privateKey length];
@@ -97,8 +94,7 @@
 	return rsaPrivate;
 }
 
-+ (NSString *)PEMFormatPublicKey:(RSA *)publicKey
-{	
++ (NSString *)PEMFormatPublicKey:(RSA *)publicKey {
 	if (!publicKey) {
 		return nil;
 	}
@@ -115,8 +111,7 @@
 }
 
 
-+ (NSString *)PEMFormatPrivateKey:(RSA *)privateKey
-{
++ (NSString *)PEMFormatPrivateKey:(RSA *)privateKey {
 	
 	if (!privateKey) {
 		return nil;
@@ -139,8 +134,7 @@
 }
 
 #pragma mark ---加解密
-+ (NSData *)encryptWithPublicKey:(RSA *)publicKey plainData:(NSData *)plainData
-{
++ (NSData *)encryptWithPublicKey:(RSA *)publicKey plainData:(NSData *)plainData {
 	if ([plainData length]) {
 		
 		int publicRSALength = RSA_size(publicKey);
@@ -169,8 +163,7 @@
 	return nil;
 }
 
-+ (NSData *)decryptWithPrivateKey:(RSA *)privateKey cipherData:(NSData *)cipherData
-{
++ (NSData *)decryptWithPrivateKey:(RSA *)privateKey cipherData:(NSData *)cipherData {
 	if ([cipherData length]) {
 		
 		int privateRSALenght = RSA_size(privateKey);
@@ -185,10 +178,9 @@
 			const unsigned char *str = [dataSegment bytes];
 			unsigned char *privateDecrypt = malloc(privateRSALenght);
 			memset(privateDecrypt, 0, privateRSALenght);
-			
-			if(RSA_private_decrypt(privateRSALenght,str,privateDecrypt,privateKey,RSA_PKCS1_PADDING)>=0){
-				NSInteger length =strlen((char *)privateDecrypt);
-				NSData *data = [[NSData alloc] initWithBytes:privateDecrypt length:length];
+            int ret = RSA_private_decrypt(privateRSALenght,str,privateDecrypt,privateKey,RSA_PKCS1_PADDING);
+			if(ret >=0){
+				NSData *data = [[NSData alloc] initWithBytes:privateDecrypt length:ret];
 				[decrypeData appendData:data];
 			}
 			free(privateDecrypt);
@@ -214,6 +206,7 @@
         char *publicEncrypt = malloc(privateRSALength);
         memset(publicEncrypt, 0, privateRSALength);
         const unsigned char *str = [dataSegment bytes];
+        
         if(RSA_private_encrypt(dataSegmentRealSize,str,(unsigned char*)publicEncrypt,privateKey,RSA_PKCS1_PADDING)>=0){
             NSData *encryptData = [[NSData alloc] initWithBytes:publicEncrypt length:privateEncryptSize];
             [encryptDate appendData:encryptData];
@@ -237,9 +230,9 @@
         const unsigned char *str = [dataSegment bytes];
         unsigned char *privateDecrypt = malloc(publicRSALenght);
         memset(privateDecrypt, 0, publicRSALenght);
-        if(RSA_public_decrypt(publicRSALenght,str,privateDecrypt,publicKey,RSA_PKCS1_PADDING)>=0){
-            NSInteger length =strlen((char *)privateDecrypt);
-            NSData *data = [[NSData alloc] initWithBytes:privateDecrypt length:length];
+        int ret = RSA_public_decrypt(publicRSALenght,str,privateDecrypt,publicKey,RSA_NO_PADDING);
+        if(ret >=0){
+            NSData *data = [[NSData alloc] initWithBytes:privateDecrypt length:ret];
             [decrypeData appendData:data];
         }
         free(privateDecrypt);
