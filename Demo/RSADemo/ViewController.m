@@ -56,10 +56,13 @@
 - (IBAction)opensslGenerate{
 	if ([DDRSAWrapper generateRSAKeyPairWithKeySize:2048 publicKey:&publicKey privateKey:&privateKey]) {
 		NSString *publicKeyPem = [DDRSAWrapper PEMFormatPublicKey:publicKey];
+        char * n = BN_bn2hex(publicKey->n);
+        char * e = BN_bn2hex(publicKey->e);
+        
 		NSString *privateKeyPem = [DDRSAWrapper PEMFormatPrivateKey:privateKey];
 		_publicKeyBase64 = [DDRSAWrapper base64EncodedFromPEMFormat:publicKeyPem];
 		_privateKeyBase64 = [DDRSAWrapper base64EncodedFromPEMFormat:privateKeyPem];
-		NSString *logText = [NSString stringWithFormat:@"openssl 生成密钥成功！\npublickKeyPem:\n%@\nprivateKeyPem:\n%@\n",publicKeyPem,privateKeyPem];
+		NSString *logText = [NSString stringWithFormat:@"openssl 生成密钥成功！\n公钥-----\n模数：%s\n指数：%s\n-------",n,e];
 		[self addlogText:logText];
 	}
 	
@@ -255,7 +258,7 @@
     
     NSData *cipherData = [DDRSAWrapper encryptWithPrivateRSA:privateKey plainData:plainData];
     _cipherString = [cipherData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-    NSString *logText = [NSString stringWithFormat:@"SecKey 公钥加密：\n%@",_cipherString];
+    NSString *logText = [NSString stringWithFormat:@"openssl 私钥加密：\n%@",_cipherString];
     [self addlogText:logText];
 
 }
@@ -275,10 +278,10 @@
     NSData *plainData = [DDRSAWrapper decryptWithPublicKey:publicKey cipherData:cipherData];
     NSString *outputPlainString = [[NSString alloc] initWithData:plainData encoding:NSUTF8StringEncoding];
     if ([outputPlainString isEqualToString:_plainString]) {
-        NSString *logText = [NSString stringWithFormat:@"SecKey 私钥解密成功：\n%@",outputPlainString];
+        NSString *logText = [NSString stringWithFormat:@"openssl 公钥解密成功：\n%@",outputPlainString];
         [self addlogText:logText];
     } else {
-        NSString *logText = [NSString stringWithFormat:@"SecKey 私钥解密失败"];
+        NSString *logText = [NSString stringWithFormat:@"openssl 公钥解密失败"];
         [self addlogText:logText];
     }
     
