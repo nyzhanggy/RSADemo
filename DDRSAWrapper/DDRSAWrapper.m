@@ -203,15 +203,15 @@
         NSUInteger loc = i * blockSize;
         int dataSegmentRealSize = MIN(blockSize, totalLength - loc);
         NSData *dataSegment = [plainData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
-        char *publicEncrypt = malloc(privateRSALength);
-        memset(publicEncrypt, 0, privateRSALength);
+        char *privateEncrypt = malloc(privateRSALength);
+        memset(privateEncrypt, 0, privateRSALength);
         const unsigned char *str = [dataSegment bytes];
         
-        if(RSA_private_encrypt(dataSegmentRealSize,str,(unsigned char*)publicEncrypt,privateKey,RSA_PKCS1_PADDING)>=0){
-            NSData *encryptData = [[NSData alloc] initWithBytes:publicEncrypt length:privateEncryptSize];
+        if(RSA_private_encrypt(dataSegmentRealSize,str,(unsigned char*)privateEncrypt,privateKey,RSA_PKCS1_PADDING)>=0){
+            NSData *encryptData = [[NSData alloc] initWithBytes:privateEncrypt length:privateEncryptSize];
             [encryptDate appendData:encryptData];
         }
-        free(publicEncrypt);
+        free(privateEncrypt);
     }
     return encryptDate;
 
@@ -228,14 +228,14 @@
         long dataSegmentRealSize = MIN(blockSize, totalLength - loc);
         NSData *dataSegment = [cipherData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
         const unsigned char *str = [dataSegment bytes];
-        unsigned char *privateDecrypt = malloc(publicRSALenght);
-        memset(privateDecrypt, 0, publicRSALenght);
-        int ret = RSA_public_decrypt(publicRSALenght,str,privateDecrypt,publicKey,RSA_PKCS1_PADDING);
+        unsigned char *publicDecrypt = malloc(publicRSALenght);
+        memset(publicDecrypt, 0, publicRSALenght);
+        int ret = RSA_public_decrypt(publicRSALenght,str,publicDecrypt,publicKey,RSA_PKCS1_PADDING);
         if(ret >=0){
-            NSData *data = [[NSData alloc] initWithBytes:privateDecrypt length:ret];
+            NSData *data = [[NSData alloc] initWithBytes:publicDecrypt length:ret];
             [decrypeData appendData:data];
         }
-        free(privateDecrypt);
+        free(publicDecrypt);
     }
     return decrypeData;
 }
