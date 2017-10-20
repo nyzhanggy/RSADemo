@@ -230,7 +230,7 @@
         const unsigned char *str = [dataSegment bytes];
         unsigned char *privateDecrypt = malloc(publicRSALenght);
         memset(privateDecrypt, 0, publicRSALenght);
-        int ret = RSA_public_decrypt(publicRSALenght,str,privateDecrypt,publicKey,RSA_NO_PADDING);
+        int ret = RSA_public_decrypt(publicRSALenght,str,privateDecrypt,publicKey,RSA_PKCS1_PADDING);
         if(ret >=0){
             NSData *data = [[NSData alloc] initWithBytes:privateDecrypt length:ret];
             [decrypeData appendData:data];
@@ -531,8 +531,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 	return rsa_pub;
 }
 
-+ (NSData *)publicKeyDataWithMod:(NSData *)modBits exp:(NSData *)expBits
-{
++ (NSData *)publicKeyDataWithMod:(NSData *)modBits exp:(NSData *)expBits {
 	
 	/*
 		整个数据分为8个部分
