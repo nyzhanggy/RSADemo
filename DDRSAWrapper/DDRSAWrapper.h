@@ -12,10 +12,10 @@
 + (RSA *)RSAPublicKeyFromPEM:(NSString *)publicKeyPEM;
 + (RSA *)RSAPrivateKeyFromPEM:(NSString *)privatePEM;
 
-+ (NSString *)PEMFormatPublicKey:(RSA *)publicKey;
-+ (NSString *)PEMFormatPrivateKey:(RSA *)privateKey;
++ (NSString *)base64EncodedStringPublicKey:(RSA *)publicKey;
++ (NSString *)base64EncodedStringPrivateKey:(RSA *)privateKey;
 
-+ (NSString *)base64EncodedFromPEMFormat:(NSString *)PEMFormat;
+
 
 + (NSData *)encryptWithPublicKey:(RSA *)publicKey plainData:(NSData *)plainData;
 + (NSData *)decryptWithPrivateKey:(RSA *)privateKey cipherData:(NSData *)cipherData;

@@ -55,13 +55,17 @@
 
 - (IBAction)opensslGenerate{
 	if ([DDRSAWrapper generateRSAKeyPairWithKeySize:2048 publicKey:&publicKey privateKey:&privateKey]) {
-		NSString *publicKeyPem = [DDRSAWrapper PEMFormatPublicKey:publicKey];
+		
         char * n = BN_bn2hex(publicKey->n);
         char * e = BN_bn2hex(publicKey->e);
         
-		NSString *privateKeyPem = [DDRSAWrapper PEMFormatPrivateKey:privateKey];
-		_publicKeyBase64 = [DDRSAWrapper base64EncodedFromPEMFormat:publicKeyPem];
-		_privateKeyBase64 = [DDRSAWrapper base64EncodedFromPEMFormat:privateKeyPem];
+		_publicKeyBase64 = [DDRSAWrapper base64EncodedStringPublicKey:publicKey];
+		_privateKeyBase64 = [DDRSAWrapper base64EncodedStringPrivateKey:privateKey];
+        NSLog(@"%@",_publicKeyBase64);
+        NSLog(@"%@",_privateKeyBase64);
+        
+        
+        
 		NSString *logText = [NSString stringWithFormat:@"openssl 生成密钥成功！\n公钥-----\n模数：%s\n指数：%s\n-------",n,e];
 		[self addlogText:logText];
 	}

@@ -17,7 +17,7 @@
 			if (publicKey && privateKey) {
 				return YES;
 			}
-		}
+        }
 	}
 	
 	return NO;
@@ -94,7 +94,7 @@
 	return rsaPrivate;
 }
 
-+ (NSString *)PEMFormatPublicKey:(RSA *)publicKey {
++ (NSString *)base64EncodedStringPublicKey:(RSA *)publicKey {
 	if (!publicKey) {
 		return nil;
 	}
@@ -104,14 +104,15 @@
 	
 	BUF_MEM *bptr;
 	BIO_get_mem_ptr(bio, &bptr);
-	BIO_set_close(bio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
-	BIO_free(bio);
-	
-	return [NSString stringWithUTF8String:bptr->data];
+    
+	NSString *pemString = [NSString stringWithFormat:@"%s",bptr->data];
+    BIO_set_close(bio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
+    BIO_free(bio);
+    return [self base64EncodedFromPEMFormat:pemString];
 }
 
 
-+ (NSString *)PEMFormatPrivateKey:(RSA *)privateKey {
++ (NSString *)base64EncodedStringPrivateKey:(RSA *)privateKey {
 	
 	if (!privateKey) {
 		return nil;
@@ -122,10 +123,13 @@
 	
 	BUF_MEM *bptr;
 	BIO_get_mem_ptr(bio, &bptr);
-	BIO_set_close(bio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
-	BIO_free(bio);
-	
-	return [NSString stringWithUTF8String:bptr->data];
+    
+    NSString *pemString = [NSString stringWithFormat:@"%s",bptr->data];
+
+    BIO_set_close(bio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
+    BIO_free(bio);
+    
+    return [self base64EncodedFromPEMFormat:pemString];
 }
 
 + (NSString *)base64EncodedFromPEMFormat:(NSString *)PEMFormat
