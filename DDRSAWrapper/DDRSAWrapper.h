@@ -24,5 +24,16 @@
 #pragma mark - 指数和模数
 - (NSData *)getPublicKeyExp:(NSData *)pk;
 - (NSData *)getPublicKeyMod:(NSData *)pk ;
+/*
+ 在 iOS9 以上的系统 模数前面要加 00，不然会转换失败
+ 
+ const char fixByte = 0;
+ NSMutableData * fixedModule = [NSMutableData dataWithBytes:&fixByte length:1];
+ [fixedModule appendData:m];
+ 
+ https://github.com/StCredZero/SCZ-BasicEncodingRules-iOS/issues/6#issuecomment-136601437
+ 
+ */
+
 - (SecKeyRef)publicKeyDataWithMod:(NSData *)modBits exp:(NSData *)expBits;
 @end
