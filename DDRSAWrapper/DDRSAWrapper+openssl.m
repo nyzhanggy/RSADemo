@@ -160,11 +160,14 @@
         char *publicEncrypt = malloc(publicRSALength);
         memset(publicEncrypt, 0, publicRSALength);
         const unsigned char *str = [dataSegment bytes];
-        
-        if(RSA_public_encrypt(dataSegmentRealSize,str,(unsigned char*)publicEncrypt,publicKey,padding)>=0){
-            NSData *encryptData = [[NSData alloc] initWithBytes:publicEncrypt length:publicEncryptSize];
-            [encryptDate appendData:encryptData];
+        int r = RSA_public_encrypt(dataSegmentRealSize,str,(unsigned char*)publicEncrypt,publicKey,padding);
+        if (r < 0) {
+            free(publicEncrypt);
+            return nil;
         }
+        NSData *encryptData = [[NSData alloc] initWithBytes:publicEncrypt length:publicEncryptSize];
+        [encryptDate appendData:encryptData];
+        
         free(publicEncrypt);
     }
     return encryptDate;
@@ -175,7 +178,12 @@
 
 + (NSData *)openssl_decryptWithPrivateKey:(RSA *)privateKey cipherData:(NSData *)cipherData padding:(int)padding{
     
-    
+    if (!privateKey) {
+        return nil;
+    }
+    if (!cipherData) {
+        return nil;
+    }
     int privateRSALenght = RSA_size(privateKey);
     double totalLength = [cipherData length];
     int blockSize = privateRSALenght;
@@ -203,11 +211,17 @@
 }
 
 + (NSData *)openssl_encryptWithPrivateRSA:(RSA *)privateKey plainData:(NSData *)plainData padding:(int)padding{
+    
+    if (!privateKey) {
+        return nil;
+    }
+    if (!plainData) {
+        return nil;
+    }
     int paddingSize = 0;
     if (padding == RSA_PKCS1_PADDING) {
         paddingSize = RSA_PKCS1_PADDING_SIZE;
     }
-    
     
     int privateRSALength = RSA_size(privateKey);
     double totalLength = [plainData length];
@@ -222,11 +236,15 @@
         char *privateEncrypt = malloc(privateRSALength);
         memset(privateEncrypt, 0, privateRSALength);
         const unsigned char *str = [dataSegment bytes];
-        
-        if(RSA_private_encrypt(dataSegmentRealSize,str,(unsigned char*)privateEncrypt,privateKey,padding)>=0){
-            NSData *encryptData = [[NSData alloc] initWithBytes:privateEncrypt length:privateEncryptSize];
-            [encryptDate appendData:encryptData];
+        int r = RSA_private_encrypt(dataSegmentRealSize,str,(unsigned char*)privateEncrypt,privateKey,padding);
+        if (r < 0) {
+            free(privateEncrypt);
+            return nil;
         }
+        
+        NSData *encryptData = [[NSData alloc] initWithBytes:privateEncrypt length:privateEncryptSize];
+        [encryptDate appendData:encryptData];
+        
         free(privateEncrypt);
     }
     return encryptDate;
@@ -234,6 +252,13 @@
 }
 
 + (NSData *)openssl_decryptWithPublicKey:(RSA *)publicKey cipherData:(NSData *)cipherData padding:(int)padding{
+    if (!publicKey) {
+        return nil;
+    }
+    if (!cipherData) {
+        return nil;
+    }
+    
     int publicRSALenght = RSA_size(publicKey);
     double totalLength = [cipherData length];
     int blockSize = publicRSALenght;

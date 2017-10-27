@@ -159,6 +159,13 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 
 #pragma mark ---加解密
 - (NSData *)encryptWithKey:(SecKeyRef)key plainData:(NSData *)plainData padding:(SecPadding)padding {
+    if (!key) {
+        return nil;
+    }
+    if (!plainData) {
+        return nil;
+    }
+    
     size_t paddingSize = 0;
     if (padding == kSecPaddingPKCS1) {
         paddingSize = 11;
@@ -199,6 +206,13 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
     return encryptDate;
 }
 - (NSData *)decryptWithKey:(SecKeyRef)key cipherData:(NSData *)cipherData padding:(SecPadding)padding {
+    if (!key) {
+        return nil;
+    }
+    if (!cipherData) {
+        return nil;
+    }
+    
     size_t keySize = SecKeyGetBlockSize(key) * sizeof(uint8_t);
     double totalLength = [cipherData length];
     size_t blockSize = keySize;
@@ -234,6 +248,12 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 }
 
 - (NSData *)decryptWithPublicKey:(SecKeyRef)publicKeyRef cipherData:(NSData *)cipherData {
+    if (!publicKeyRef) {
+        return nil;
+    }
+    if (!cipherData) {
+        return nil;
+    }
     
     size_t keySize = SecKeyGetBlockSize(publicKeyRef) * sizeof(uint8_t);
     double totalLength = [cipherData length];

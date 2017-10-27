@@ -332,7 +332,7 @@
     
     NSData *cipherData = [DDRSAWrapper openssl_encryptWithPrivateRSA:privateKey
                                                            plainData:plainData
-                                                             padding:RSA_PKCS1_PADDING];
+                                                             padding:RSA_NO_PADDING];
     
     _cipherString = [cipherData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
     NSString *logText = [NSString stringWithFormat:@"openssl 私钥加密：\n%@",_cipherString];
