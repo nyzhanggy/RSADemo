@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1527BE841EBB077C006F839F /* DDRSAWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1527BE831EBB077C006F839F /* DDRSAWrapper.m */; };
+		157F1B6B1FA2FD680042D4F9 /* DDRSAWrapper+openssl.m in Sources */ = {isa = PBXBuildFile; fileRef = 157F1B6A1FA2FD680042D4F9 /* DDRSAWrapper+openssl.m */; };
 		1598A5531E6961B30031D3A3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1598A5521E6961B30031D3A3 /* main.m */; };
 		1598A5561E6961B30031D3A3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1598A5551E6961B30031D3A3 /* AppDelegate.m */; };
 		1598A5591E6961B30031D3A3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1598A5581E6961B30031D3A3 /* ViewController.m */; };
@@ -20,6 +21,8 @@
 /* Begin PBXFileReference section */
 		1527BE821EBB077C006F839F /* DDRSAWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDRSAWrapper.h; sourceTree = "<group>"; };
 		1527BE831EBB077C006F839F /* DDRSAWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDRSAWrapper.m; sourceTree = "<group>"; };
+		157F1B691FA2FD670042D4F9 /* DDRSAWrapper+openssl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDRSAWrapper+openssl.h"; sourceTree = "<group>"; };
+		157F1B6A1FA2FD680042D4F9 /* DDRSAWrapper+openssl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DDRSAWrapper+openssl.m"; sourceTree = "<group>"; };
 		1598A54E1E6961B30031D3A3 /* RSADemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RSADemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1598A5521E6961B30031D3A3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1598A5541E6961B30031D3A3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -52,6 +55,8 @@
 			children = (
 				1527BE821EBB077C006F839F /* DDRSAWrapper.h */,
 				1527BE831EBB077C006F839F /* DDRSAWrapper.m */,
+				157F1B691FA2FD670042D4F9 /* DDRSAWrapper+openssl.h */,
+				157F1B6A1FA2FD680042D4F9 /* DDRSAWrapper+openssl.m */,
 			);
 			name = DDRSAWrapper;
 			path = ../../DDRSAWrapper;
@@ -245,6 +250,7 @@
 				1527BE841EBB077C006F839F /* DDRSAWrapper.m in Sources */,
 				1598A5591E6961B30031D3A3 /* ViewController.m in Sources */,
 				1598A5561E6961B30031D3A3 /* AppDelegate.m in Sources */,
+				157F1B6B1FA2FD680042D4F9 /* DDRSAWrapper+openssl.m in Sources */,
 				1598A5531E6961B30031D3A3 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

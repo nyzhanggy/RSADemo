@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -30,7 +30,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M9x-HK-0tO">
-                                <rect key="frame" x="248" y="57" width="107" height="27"/>
+                                <rect key="frame" x="247" y="57" width="108" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <state key="normal" title="生成密钥(生成模指)"/>
                                 <connections>
@@ -128,11 +128,11 @@
                                     <action selector="opensslPubcliKeyEncrypt" destination="BYZ-38-t0r" eventType="touchUpInside" id="m97-Iz-lyk"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="log" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DHb-7T-EW5">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="log" translatesAutoresizingMaskIntoConstraints="NO" id="DHb-7T-EW5">
                                 <rect key="frame" x="20" y="315" width="335" height="332"/>
                                 <color key="backgroundColor" red="0.99793201679999999" green="0.98813384770000001" blue="0.91720098260000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="9"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zKZ-fz-Cbc">
                                 <rect key="frame" x="20" y="57" width="108" height="27"/>
@@ -158,6 +158,22 @@
                                     <action selector="opensslPublicKeyDecrypt:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Xdm-Vk-mzX"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IrU-X9-HhS">
+                                <rect key="frame" x="301" y="267" width="54" height="28"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="公钥解密"/>
+                                <connections>
+                                    <action selector="SecRefPublicKeyDecrypt:" destination="BYZ-38-t0r" eventType="touchUpInside" id="avf-NG-OC3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bRX-Qf-Yax">
+                                <rect key="frame" x="227" y="267" width="54" height="28"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="私钥加密"/>
+                                <connections>
+                                    <action selector="SecRefPrivateEncrypt:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oDf-ZL-5ty"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -167,6 +183,7 @@
                             <constraint firstItem="T8n-yX-2Jp" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="AOZ-hp-a0X"/>
                             <constraint firstAttribute="trailing" secondItem="mxo-Yo-QHK" secondAttribute="trailing" constant="20" id="AmN-Ix-RvW"/>
                             <constraint firstItem="zKZ-fz-Cbc" firstAttribute="top" secondItem="2ES-V9-Ixb" secondAttribute="bottom" constant="8" id="ApT-f4-jsH"/>
+                            <constraint firstItem="IrU-X9-HhS" firstAttribute="centerY" secondItem="GB6-bj-N8q" secondAttribute="centerY" id="Br2-Ie-Ddj"/>
                             <constraint firstItem="DHb-7T-EW5" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="EqI-bA-Ipx"/>
                             <constraint firstItem="J36-Zg-ZDi" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GBG-Rb-AQZ"/>
                             <constraint firstItem="T8n-yX-2Jp" firstAttribute="top" secondItem="YpJ-XN-Ogc" secondAttribute="bottom" constant="8" id="HSz-pl-B1b"/>
@@ -183,10 +200,12 @@
                             <constraint firstAttribute="trailing" secondItem="B7g-at-pgs" secondAttribute="trailing" constant="20" id="a6M-o8-HOK"/>
                             <constraint firstItem="QtL-eN-2uT" firstAttribute="top" secondItem="G3E-dV-cOZ" secondAttribute="bottom" constant="8" id="c5f-Hh-ECt"/>
                             <constraint firstItem="G3E-dV-cOZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="cjX-t9-Rlh"/>
+                            <constraint firstItem="IrU-X9-HhS" firstAttribute="trailing" secondItem="AK8-Ur-bd6" secondAttribute="trailing" id="cvt-Wn-mvT"/>
                             <constraint firstItem="t9S-ew-MJf" firstAttribute="top" secondItem="fnG-wR-8WL" secondAttribute="bottom" constant="8" id="dHh-kd-8RW"/>
                             <constraint firstAttribute="trailing" secondItem="M9x-HK-0tO" secondAttribute="trailing" constant="20" id="ee2-Eg-xBs"/>
                             <constraint firstItem="M9x-HK-0tO" firstAttribute="top" secondItem="k5b-De-7RW" secondAttribute="bottom" constant="8" id="fZ8-gD-Hlp"/>
                             <constraint firstItem="GB6-bj-N8q" firstAttribute="leading" secondItem="T8n-yX-2Jp" secondAttribute="trailing" constant="20" id="gkI-ky-mBp"/>
+                            <constraint firstItem="IrU-X9-HhS" firstAttribute="leading" secondItem="bRX-Qf-Yax" secondAttribute="trailing" constant="20" id="hle-r2-ZBe"/>
                             <constraint firstItem="zKZ-fz-Cbc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="hwJ-cM-eWC"/>
                             <constraint firstItem="fnG-wR-8WL" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="i3L-nq-oDO"/>
                             <constraint firstItem="bzp-sv-mS0" firstAttribute="top" secondItem="mxo-Yo-QHK" secondAttribute="bottom" constant="8" id="jRP-24-RMT"/>
@@ -199,6 +218,7 @@
                             <constraint firstItem="mxo-Yo-QHK" firstAttribute="top" secondItem="B7g-at-pgs" secondAttribute="bottom" constant="8" id="phk-D7-l4m"/>
                             <constraint firstItem="B7g-at-pgs" firstAttribute="top" secondItem="M9x-HK-0tO" secondAttribute="bottom" constant="8" id="sKe-nw-ocG"/>
                             <constraint firstItem="k5b-De-7RW" firstAttribute="height" secondItem="2ES-V9-Ixb" secondAttribute="height" id="sh0-km-W2t"/>
+                            <constraint firstItem="IrU-X9-HhS" firstAttribute="centerY" secondItem="bRX-Qf-Yax" secondAttribute="centerY" id="u7G-e9-zRw"/>
                             <constraint firstAttribute="trailing" secondItem="onX-eX-zAi" secondAttribute="trailing" constant="20" id="xdg-5u-NYG"/>
                         </constraints>
                     </view>

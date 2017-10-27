@@ -3,250 +3,10 @@
 #import "DDRSAWrapper.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-#import <openssl/pem.h>
-
 @implementation DDRSAWrapper
-#pragma mark - openssl
+
 #pragma mark ---生成密钥对
-+ (BOOL)generateRSAKeyPairWithKeySize:(int)keySize publicKey:(RSA **)publicKey privateKey:(RSA **)privateKey {
-	if (keySize == 512 || keySize == 1024 || keySize == 2048) {
-		RSA *rsa = RSA_generate_key(keySize,RSA_F4,NULL,NULL);
-		if (rsa) {
-			*privateKey = RSAPrivateKey_dup(rsa);
-			*publicKey = RSAPublicKey_dup(rsa);
-			if (publicKey && privateKey) {
-				return YES;
-			}
-        }
-	}
-	
-	return NO;
-}
-#pragma mark ---密钥格式转换
-+ (RSA *)RSAPublicKeyFromPEM:(NSString *)publicKeyPEM {
-	const char *buffer = [publicKeyPEM UTF8String];
-	
-	BIO *bpubkey = BIO_new_mem_buf(buffer, (int)strlen(buffer));
-	
-	RSA *rsaPublic = PEM_read_bio_RSA_PUBKEY(bpubkey, NULL, NULL, NULL);
-	
-	BIO_free_all(bpubkey);
-	return rsaPublic;
-}
-
-+ (RSA *)RSAPublicKeyFromBase64:(NSString *)publicKey {
-	//格式化公钥
-	NSMutableString *result = [NSMutableString string];
-	[result appendString:@"-----BEGIN PUBLIC KEY-----\n"];
-	int count = 0;
-	for (int i = 0; i < [publicKey length]; ++i) {
-		
-		unichar c = [publicKey characterAtIndex:i];
-		if (c == '\n' || c == '\r') {
-			continue;
-		}
-		[result appendFormat:@"%c", c];
-		if (++count == 64) {
-			[result appendString:@"\n"];
-			count = 0;
-		}
-	}
-	[result appendString:@"\n-----END PUBLIC KEY-----"];
-	
-	return [self RSAPublicKeyFromPEM:result];
-	
-}
-
-+ (RSA *)RSAPrivateKeyFromBase64:(NSString *)privateKey {
-	//格式化私钥
-	const char *pstr = [privateKey UTF8String];
-	int len = (int)[privateKey length];
-	NSMutableString *result = [NSMutableString string];
-	[result appendString:@"-----BEGIN RSA PRIVATE KEY-----\n"];
-	int index = 0;
-	int count = 0;
-	while (index < len) {
-		char ch = pstr[index];
-		if (ch == '\r' || ch == '\n') {
-			++index;
-			continue;
-		}
-		[result appendFormat:@"%c", ch];
-		if (++count == 64) {
-			
-			[result appendString:@"\n"];
-			count = 0;
-		}
-		index++;
-	}
-	[result appendString:@"\n-----END RSA PRIVATE KEY-----"];
-	return [self RSAPrivateKeyFromPEM:result];
-	
-}
-+ (RSA *)RSAPrivateKeyFromPEM:(NSString *)privatePEM {
-	
-	const char *buffer = [privatePEM UTF8String];
-	
-	BIO *bpubkey = BIO_new_mem_buf(buffer, (int)strlen(buffer));
-	
-	RSA *rsaPrivate = PEM_read_bio_RSAPrivateKey(bpubkey, NULL, NULL, NULL);
-	BIO_free_all(bpubkey);
-	return rsaPrivate;
-}
-
-+ (NSString *)base64EncodedStringPublicKey:(RSA *)publicKey {
-	if (!publicKey) {
-		return nil;
-	}
-	
-	BIO *bio = BIO_new(BIO_s_mem());
-	PEM_write_bio_RSA_PUBKEY(bio, publicKey);
-	
-	BUF_MEM *bptr;
-	BIO_get_mem_ptr(bio, &bptr);
-    
-	NSString *pemString = [NSString stringWithFormat:@"%s",bptr->data];
-    BIO_set_close(bio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
-    BIO_free(bio);
-    return [self base64EncodedFromPEMFormat:pemString];
-}
-
-
-+ (NSString *)base64EncodedStringPrivateKey:(RSA *)privateKey {
-	
-	if (!privateKey) {
-		return nil;
-	}
-	
-	BIO *bio = BIO_new(BIO_s_mem());
-	PEM_write_bio_RSAPrivateKey(bio, privateKey, NULL, NULL, 0, NULL, NULL);
-	
-	BUF_MEM *bptr;
-	BIO_get_mem_ptr(bio, &bptr);
-    
-    NSString *pemString = [NSString stringWithFormat:@"%s",bptr->data];
-
-    BIO_set_close(bio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
-    BIO_free(bio);
-    
-    return [self base64EncodedFromPEMFormat:pemString];
-}
-
-+ (NSString *)base64EncodedFromPEMFormat:(NSString *)PEMFormat
-{
-	return [[PEMFormat componentsSeparatedByString:@"-----"] objectAtIndex:2];
-}
-
-#pragma mark ---加解密
-+ (NSData *)encryptWithPublicKey:(RSA *)publicKey plainData:(NSData *)plainData {
-	if ([plainData length]) {
-		
-		int publicRSALength = RSA_size(publicKey);
-		double totalLength = [plainData length];
-		int blockSize = publicRSALength - 11;
-		int blockCount = ceil(totalLength / blockSize);    
-		size_t publicEncryptSize = publicRSALength;
-		NSMutableData *encryptDate = [NSMutableData data];
-		for (int i = 0; i < blockCount; i++) {
-			NSUInteger loc = i * blockSize;
-			int dataSegmentRealSize = MIN(blockSize, totalLength - loc);
-			NSData *dataSegment = [plainData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
-			char *publicEncrypt = malloc(publicRSALength);
-			memset(publicEncrypt, 0, publicRSALength);
-			const unsigned char *str = [dataSegment bytes];
-			
-			if(RSA_public_encrypt(dataSegmentRealSize,str,(unsigned char*)publicEncrypt,publicKey,RSA_PKCS1_PADDING)>=0){
-				NSData *encryptData = [[NSData alloc] initWithBytes:publicEncrypt length:publicEncryptSize];
-				[encryptDate appendData:encryptData];
-			}
-			free(publicEncrypt);
-		}
-		return encryptDate;
-	}
-	
-	return nil;
-}
-
-+ (NSData *)decryptWithPrivateKey:(RSA *)privateKey cipherData:(NSData *)cipherData {
-	if ([cipherData length]) {
-		
-		int privateRSALenght = RSA_size(privateKey);
-		double totalLength = [cipherData length];
-		int blockSize = privateRSALenght;
-		int blockCount = ceil(totalLength / blockSize);
-		NSMutableData *decrypeData = [NSMutableData data];
-		for (int i = 0; i < blockCount; i++) {
-			NSUInteger loc = i * blockSize;
-			long dataSegmentRealSize = MIN(blockSize, totalLength - loc);
-			NSData *dataSegment = [cipherData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
-			const unsigned char *str = [dataSegment bytes];
-			unsigned char *privateDecrypt = malloc(privateRSALenght);
-			memset(privateDecrypt, 0, privateRSALenght);
-            int ret = RSA_private_decrypt(privateRSALenght,str,privateDecrypt,privateKey,RSA_PKCS1_PADDING);
-			if(ret >=0){
-				NSData *data = [[NSData alloc] initWithBytes:privateDecrypt length:ret];
-				[decrypeData appendData:data];
-			}
-			free(privateDecrypt);
-		}
-		
-		return decrypeData;
-	}
-	
-	return nil;
-}
-
-+ (NSData *)encryptWithPrivateRSA:(RSA *)privateKey plainData:(NSData *)plainData {
-    int privateRSALength = RSA_size(privateKey);
-    double totalLength = [plainData length];
-    int blockSize = privateRSALength - 11;
-    int blockCount = ceil(totalLength / blockSize);
-    size_t privateEncryptSize = privateRSALength;
-    NSMutableData *encryptDate = [NSMutableData data];
-    for (int i = 0; i < blockCount; i++) {
-        NSUInteger loc = i * blockSize;
-        int dataSegmentRealSize = MIN(blockSize, totalLength - loc);
-        NSData *dataSegment = [plainData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
-        char *privateEncrypt = malloc(privateRSALength);
-        memset(privateEncrypt, 0, privateRSALength);
-        const unsigned char *str = [dataSegment bytes];
-        
-        if(RSA_private_encrypt(dataSegmentRealSize,str,(unsigned char*)privateEncrypt,privateKey,RSA_PKCS1_PADDING)>=0){
-            NSData *encryptData = [[NSData alloc] initWithBytes:privateEncrypt length:privateEncryptSize];
-            [encryptDate appendData:encryptData];
-        }
-        free(privateEncrypt);
-    }
-    return encryptDate;
-
-}
-
-+ (NSData *)decryptWithPublicKey:(RSA *)publicKey cipherData:(NSData *)cipherData {
-    int publicRSALenght = RSA_size(publicKey);
-    double totalLength = [cipherData length];
-    int blockSize = publicRSALenght;
-    int blockCount = ceil(totalLength / blockSize);
-    NSMutableData *decrypeData = [NSMutableData data];
-    for (int i = 0; i < blockCount; i++) {
-        NSUInteger loc = i * blockSize;
-        long dataSegmentRealSize = MIN(blockSize, totalLength - loc);
-        NSData *dataSegment = [cipherData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
-        const unsigned char *str = [dataSegment bytes];
-        unsigned char *publicDecrypt = malloc(publicRSALenght);
-        memset(publicDecrypt, 0, publicRSALenght);
-        int ret = RSA_public_decrypt(publicRSALenght,str,publicDecrypt,publicKey,RSA_PKCS1_PADDING);
-        if(ret >=0){
-            NSData *data = [[NSData alloc] initWithBytes:publicDecrypt length:ret];
-            [decrypeData appendData:data];
-        }
-        free(publicDecrypt);
-    }
-    return decrypeData;
-}
-
-#pragma mark - SecKeyRef
-#pragma mark ---生成密钥对
-+ (BOOL)generateSecKeyPairWithKeySize:(NSUInteger)keySize publicKeyRef:(SecKeyRef *)publicKeyRef privateKeyRef:(SecKeyRef *)privateKeyRef{
+- (BOOL)generateSecKeyPairWithKeySize:(NSUInteger)keySize publicKeyRef:(SecKeyRef *)publicKeyRef privateKeyRef:(SecKeyRef *)privateKeyRef{
 	OSStatus sanityCheck = noErr;
 	if (keySize == 512 || keySize == 1024 || keySize == 2048) {
 		NSData *publicTag = [@"com.your.company.publickey" dataUsingEncoding:NSUTF8StringEncoding];
@@ -286,7 +46,7 @@
 #pragma mark ---密钥类型转换
 static NSString * const kTransfromIdenIdentifierPublic = @"kTransfromIdenIdentifierPublic";
 static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdentifierPrivate";
-+ (NSData *)publicKeyBitsFromSecKey:(SecKeyRef)givenKey {
+- (NSData *)publicKeyBitsFromSecKey:(SecKeyRef)givenKey {
 	
 	NSData *peerTag = [kTransfromIdenIdentifierPublic dataUsingEncoding:NSUTF8StringEncoding];
 	
@@ -295,11 +55,15 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 	
 	NSMutableDictionary * queryKey = [[NSMutableDictionary alloc] init];
 	[queryKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
+    [queryKey setObject:(id)kSecAttrKeyClassPublic forKey:(id)kSecAttrKeyClass];
 	[queryKey setObject:peerTag forKey:(__bridge id)kSecAttrApplicationTag];
+    
+    [queryKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    
 	[queryKey setObject:(__bridge id)givenKey forKey:(__bridge id)kSecValueRef];
-	[queryKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
 	[queryKey setObject:@YES forKey:(__bridge id)kSecReturnData];
-	[queryKey setObject:(id)kSecAttrKeyClassPublic forKey:(id)kSecAttrKeyClass];
+    
+	
 	
 	CFTypeRef result;
 	sanityCheck = SecItemAdd((__bridge CFDictionaryRef) queryKey, &result);
@@ -312,33 +76,36 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 	return keyBits;
 }
 
-+ (SecKeyRef)publicSecKeyFromKeyBits:(NSData *)givenData {
+- (SecKeyRef)publicSecKeyFromKeyBits:(NSData *)givenData {
 	
 	NSData *peerTag = [kTransfromIdenIdentifierPublic dataUsingEncoding:NSUTF8StringEncoding];
 	
+    
 	OSStatus sanityCheck = noErr;
 	SecKeyRef secKey = nil;
 	
 	NSMutableDictionary * queryKey = [[NSMutableDictionary alloc] init];
 	[queryKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
 	[queryKey setObject:peerTag forKey:(__bridge id)kSecAttrApplicationTag];
+    [queryKey setObject:(id)kSecAttrKeyClassPublic forKey:(id)kSecAttrKeyClass];
+    
 	[queryKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-	[queryKey setObject:givenData forKey:(__bridge id)kSecValueData];
-	[queryKey setObject:@YES forKey:(__bridge id)kSecReturnRef];
-	[queryKey setObject:(id)kSecAttrKeyClassPublic forKey:(id)kSecAttrKeyClass];
 	
+    [queryKey setObject:givenData forKey:(__bridge id)kSecValueData];
+	[queryKey setObject:@YES forKey:(__bridge id)kSecReturnRef];
+	
+    (void)SecItemDelete((__bridge CFDictionaryRef) queryKey);
+    
 	CFTypeRef result;
 	sanityCheck = SecItemAdd((__bridge CFDictionaryRef) queryKey, &result);
 	if (sanityCheck == errSecSuccess) {
 		secKey = (SecKeyRef)result;
-		
-		(void)SecItemDelete((__bridge CFDictionaryRef) queryKey);
 	}
 	
 	return secKey;
 }
 
-+ (NSData *)privateKeyBitsFromSecKey:(SecKeyRef)givenKey {
+- (NSData *)privateKeyBitsFromSecKey:(SecKeyRef)givenKey {
 	
 	NSData *peerTag = [kTransfromIdenIdentifierPrivate dataUsingEncoding:NSUTF8StringEncoding];
 	
@@ -364,7 +131,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 	return keyBits;
 }
 
-+ (SecKeyRef)privateSecKeyFromKeyBits:(NSData *)givenData {
+- (SecKeyRef)privateSecKeyFromKeyBits:(NSData *)givenData {
 	
 	NSData *peerTag = [kTransfromIdenIdentifierPrivate dataUsingEncoding:NSUTF8StringEncoding];
 	
@@ -391,82 +158,131 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 }
 
 #pragma mark ---加解密
-
-+ (NSData *)encryptwithPublicKeyRef:(SecKeyRef)publciKeyRef plainData:(NSData *)plainData {
-	
-	size_t publciKeyLenght = SecKeyGetBlockSize(publciKeyRef) * sizeof(uint8_t);
-	double totalLength = [plainData length];
-	size_t blockSize = publciKeyLenght - 11;
-	int blockCount = ceil(totalLength / blockSize);
-	NSMutableData *encryptDate = [NSMutableData data];
-	for (int i = 0; i < blockCount; i++) {
-		NSUInteger loc = i * blockSize;
-		int dataSegmentRealSize = MIN(blockSize, totalLength - loc);
-		NSData *dataSegment = [plainData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
-		unsigned char *cipherBuffer = malloc(publciKeyLenght);
-		memset(cipherBuffer, 0, publciKeyLenght);
-		
-		OSStatus status = noErr;
-		size_t cipherBufferSize ;
-		status = SecKeyEncrypt(publciKeyRef,
-							   kSecPaddingPKCS1,
-							   [dataSegment bytes],
-							   dataSegmentRealSize,
-							   cipherBuffer,
-							   &cipherBufferSize
-							   );
-		
-		if(status == noErr){
-			NSData *encryptData = [[NSData alloc] initWithBytes:cipherBuffer length:cipherBufferSize];
-			[encryptDate appendData:encryptData];
-		}
-		free(cipherBuffer);
-	}
-	return encryptDate;
-
+- (NSData *)encryptWithKey:(SecKeyRef)key plainData:(NSData *)plainData padding:(SecPadding)padding {
+    size_t paddingSize = 0;
+    if (padding == kSecPaddingPKCS1) {
+        paddingSize = 11;
+    } else if (padding == kSecPaddingOAEP) {
+        paddingSize = 41;
+    }
+    size_t keySize = SecKeyGetBlockSize(key) * sizeof(uint8_t);
+    double totalLength = [plainData length];
+    size_t blockSize = keySize - paddingSize;
+    int blockCount = ceil(totalLength / blockSize);
+    NSMutableData *encryptDate = [NSMutableData data];
+    for (int i = 0; i < blockCount; i++) {
+        NSUInteger loc = i * blockSize;
+        int dataSegmentRealSize = MIN(blockSize, totalLength - loc);
+        NSData *dataSegment = [plainData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
+        unsigned char *cipherBuffer = malloc(keySize);
+        memset(cipherBuffer, 0, keySize);
+        
+        OSStatus status = noErr;
+        size_t cipherBufferSize ;
+        status = SecKeyEncrypt(key,
+                               padding,
+                               [dataSegment bytes],
+                               dataSegmentRealSize,
+                               cipherBuffer,
+                               &cipherBufferSize
+                               );
+        
+        if(status == noErr){
+            NSData *encryptData = [[NSData alloc] initWithBytes:cipherBuffer length:cipherBufferSize];
+            [encryptDate appendData:encryptData];
+        } else {
+            free(cipherBuffer);
+            return nil;
+        }
+        free(cipherBuffer);
+    }
+    return encryptDate;
+}
+- (NSData *)decryptWithKey:(SecKeyRef)key cipherData:(NSData *)cipherData padding:(SecPadding)padding {
+    size_t keySize = SecKeyGetBlockSize(key) * sizeof(uint8_t);
+    double totalLength = [cipherData length];
+    size_t blockSize = keySize;
+    int blockCount = ceil(totalLength / blockSize);
+    NSMutableData *decrypeData = [NSMutableData data];
+    for (int i = 0; i < blockCount; i++) {
+        NSUInteger loc = i * blockSize;
+        long dataSegmentRealSize = MIN(blockSize, totalLength - loc);
+        NSData *dataSegment = [cipherData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
+        unsigned char *plainBuffer = malloc(keySize);
+        memset(plainBuffer, 0, keySize);
+        OSStatus status = noErr;
+        size_t plainBufferSize ;
+        status = SecKeyDecrypt(key,
+                               padding,
+                               [dataSegment bytes],
+                               dataSegmentRealSize,
+                               plainBuffer,
+                               &plainBufferSize
+                               );
+        if(status == noErr){
+            NSData *data = [[NSData alloc] initWithBytes:plainBuffer length:plainBufferSize];
+            [decrypeData appendData:data];
+        } else {
+            free(plainBuffer);
+            return nil;
+        }
+        
+    }
+    
+    return decrypeData;
+    
 }
 
-+ (NSData *)decryptWithPrivateKeyRef:(SecKeyRef)privateKeyRef cipherData:(NSData *)cipherData {
-	
-	if ([cipherData length]) {
-		
-		size_t privateRSALenght = SecKeyGetBlockSize(privateKeyRef) * sizeof(uint8_t);
-		double totalLength = [cipherData length];
-		size_t blockSize = privateRSALenght;
-		int blockCount = ceil(totalLength / blockSize);
-		NSMutableData *decrypeData = [NSMutableData data];
-		for (int i = 0; i < blockCount; i++) {
-			NSUInteger loc = i * blockSize;
-			long dataSegmentRealSize = MIN(blockSize, totalLength - loc);
-			NSData *dataSegment = [cipherData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
-			unsigned char *plainBuffer = malloc(privateRSALenght);
-			memset(plainBuffer, 0, privateRSALenght);
-			OSStatus status = noErr;
-			size_t plainBufferSize ;
-			status = SecKeyDecrypt(privateKeyRef,
-								   kSecPaddingPKCS1,
-								   [dataSegment bytes],
-								   dataSegmentRealSize,
-								   plainBuffer,
-								   &plainBufferSize
-								   );
-			if(status == noErr){
-				NSData *data = [[NSData alloc] initWithBytes:plainBuffer length:plainBufferSize];
-				[decrypeData appendData:data];
-			}
-			free(plainBuffer);
-		}
-		
-		return decrypeData;
-	}
-	
-	return nil;
+- (NSData *)decryptWithPublicKey:(SecKeyRef)publicKeyRef cipherData:(NSData *)cipherData {
+    
+    size_t keySize = SecKeyGetBlockSize(publicKeyRef) * sizeof(uint8_t);
+    double totalLength = [cipherData length];
+    size_t blockSize = keySize;
+    int blockCount = ceil(totalLength / blockSize);
+    NSMutableData *plainData = [NSMutableData data];
+    for (int i = 0; i < blockCount; i++) {
+        NSUInteger loc = i * blockSize;
+        long dataSegmentRealSize = MIN(blockSize, totalLength - loc);
+        NSData *dataSegment = [cipherData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
+        unsigned char *plainBuffer = malloc(keySize);
+        memset(plainBuffer, 0, keySize);
+        OSStatus status = noErr;
+        size_t plainBufferSize ;
+        status = SecKeyDecrypt(publicKeyRef,
+                               kSecPaddingNone, // 解密的时候一定要用 无填充模式，拿到所有的数据自行解析
+                               [dataSegment bytes],
+                               dataSegmentRealSize,
+                               plainBuffer,
+                               &plainBufferSize
+                               );
+        if(status != noErr){
+            free(plainBuffer);
+            return nil;
+        }
+        
+        NSData *data = [[NSData alloc] initWithBytes:plainBuffer length:plainBufferSize];
+        
+        NSData *startData = [data subdataWithRange:NSMakeRange(0, 1)];
+        // 开头应该是 0001 但是原生解出来之后把开头的 00 忽略了
+        if ([[startData description] isEqualToString:@"<01>"]) {
+            Byte flag[] = {0x00};
+            NSRange startRange = [data rangeOfData:[NSData dataWithBytes:flag length:1] options:NSDataSearchBackwards range:NSMakeRange(0, data.length)];
+            NSUInteger s = startRange.location + startRange.length;
+            if (startRange.location != NSNotFound && s < data.length) {
+                data = [data subdataWithRange:NSMakeRange(s, data.length - s)];
+            }
+        }
+        
+        [plainData appendData:data];
+        free(plainBuffer);
+    }
+    
+    return plainData;
 }
-
 
 #pragma mark - 公钥与模数和指数转换
 //公钥指数
-+ (NSData *)getPublicKeyExp:(NSData *)pk {
+- (NSData *)getPublicKeyExp:(NSData *)pk {
 
 	if (pk == NULL) return NULL;
 	
@@ -485,7 +301,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 	return [pk subdataWithRange:NSMakeRange(iterator, exp_size)];
 }
 //模数
-+ (NSData *)getPublicKeyMod:(NSData *)pk {
+- (NSData *)getPublicKeyMod:(NSData *)pk {
 	if (pk == NULL) return NULL;
 	
 	int iterator = 0;
@@ -499,7 +315,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 	return [pk subdataWithRange:NSMakeRange(iterator, mod_size)];
 }
 
-+ (int)derEncodingGetSizeFrom:(NSData*)buf at:(int*)iterator {
+- (int)derEncodingGetSizeFrom:(NSData*)buf at:(int*)iterator {
 	const uint8_t* data = [buf bytes];
 	int itr = *iterator;
 	int num_bytes = 1;
@@ -516,26 +332,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 	return ret;
 }
 
-
-//指数模数生成公钥
-+ (RSA *)publicKeyFormMod:(NSString *)mod exp:(NSString *)exp {
-
-	RSA * rsa_pub = RSA_new();
-	
-	const char *N=[mod UTF8String] ;
-	const char *E=[exp UTF8String];
-	
-	if (!BN_hex2bn(&rsa_pub->n, N)) {
-		return nil;
-	}
-	
-	if (!BN_hex2bn(&rsa_pub->e, E)) {
-		return nil;
-	}
-	return rsa_pub;
-}
-
-+ (NSData *)publicKeyDataWithMod:(NSData *)modBits exp:(NSData *)expBits {
+- (SecKeyRef)publicKeyDataWithMod:(NSData *)modBits exp:(NSData *)expBits {
 	
 	/*
 		整个数据分为8个部分
@@ -611,7 +408,8 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
 	//第八部分
 	[expBits getBytes:&fullKeyBytes[bytep++] length:[expBits length]];
 	
-	return fullKey;
+    
+	return [self publicSecKeyFromKeyBits:fullKey];
 }
 
 @end
