@@ -185,7 +185,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
         memset(cipherBuffer, 0, keySize);
         
         OSStatus status = noErr;
-        size_t cipherBufferSize ;
+        size_t cipherBufferSize = keySize;
         status = SecKeyEncrypt(key,
                                padding,
                                [dataSegment bytes],
@@ -225,7 +225,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
         unsigned char *plainBuffer = malloc(keySize);
         memset(plainBuffer, 0, keySize);
         OSStatus status = noErr;
-        size_t plainBufferSize ;
+        size_t plainBufferSize = keySize ;
         status = SecKeyDecrypt(key,
                                padding,
                                [dataSegment bytes],
@@ -240,13 +240,64 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
             free(plainBuffer);
             return nil;
         }
-        
     }
     
     return decrypeData;
     
 }
 
+- (NSData *)encryptWithPrivateKey:(SecKeyRef)key plainData:(NSData *)plainData  {
+    if (!key) {
+        return nil;
+    }
+    if (!plainData) {
+        return nil;
+    }
+    
+    size_t paddingSize = 1; // 分段长度 -1 ，兼容有中文的情况。
+    size_t keySize = SecKeyGetBlockSize(key) * sizeof(uint8_t);
+    double totalLength = [plainData length];
+    size_t blockSize = keySize - paddingSize;
+    int blockCount = ceil(totalLength / blockSize);
+    NSMutableData *encryptData = [NSMutableData data];
+    for (int i = 0; i < blockCount; i++) {
+        NSUInteger loc = i * blockSize;
+        int dataSegmentRealSize = MIN(blockSize, totalLength - loc);
+        NSData *dataSegment = [plainData subdataWithRange:NSMakeRange(loc, dataSegmentRealSize)];
+        unsigned char *cipherBuffer = malloc(keySize);
+        memset(cipherBuffer, 0, keySize);
+        
+        OSStatus status = noErr;
+        size_t cipherBufferSize = keySize;
+        status = SecKeyDecrypt(key,
+                               kSecPaddingNone,
+                               [dataSegment bytes],
+                               dataSegmentRealSize,
+                               cipherBuffer,
+                               &cipherBufferSize
+                               );
+        
+        if(status == noErr){
+            // 如果解密出来的数据小于 keySize 需要 在前面拼接 00 
+            if (cipherBufferSize != keySize) {
+                NSInteger paddingLength = keySize - cipherBufferSize;
+                const char fixByte = 0;
+                NSMutableData * fixedData = [NSMutableData dataWithBytes:&fixByte length:paddingLength];
+                [fixedData appendBytes:cipherBuffer length:cipherBufferSize];
+                [encryptData appendData:fixedData];
+            } else {
+                NSData *resultData = [[NSData alloc] initWithBytes:cipherBuffer length:keySize];
+                [encryptData appendData:resultData];
+            }
+        } else {
+            free(cipherBuffer);
+            return nil;
+        }
+        free(cipherBuffer);
+    }
+    return encryptData;
+    
+}
 - (NSData *)decryptWithPublicKey:(SecKeyRef)publicKeyRef cipherData:(NSData *)cipherData {
     if (!publicKeyRef) {
         return nil;
@@ -267,7 +318,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
         unsigned char *plainBuffer = malloc(keySize);
         memset(plainBuffer, 0, keySize);
         OSStatus status = noErr;
-        size_t plainBufferSize ;
+        size_t plainBufferSize = keySize;
         status = SecKeyDecrypt(publicKeyRef,
                                kSecPaddingNone, // 解密的时候一定要用 无填充模式，拿到所有的数据自行解析
                                [dataSegment bytes],
@@ -275,6 +326,8 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
                                plainBuffer,
                                &plainBufferSize
                                );
+        
+        NSAssert(status == noErr, @"Decrypt error");
         if(status != noErr){
             free(plainBuffer);
             return nil;

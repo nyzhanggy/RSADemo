@@ -39,7 +39,7 @@
     _wrapper = [[DDRSAWrapper alloc] init];
     
     
-    _plainString = @"dsakdskahdskah中文dksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.164103201中文3dsakdskahdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdska中文hdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahd中文sahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.164103201中文3dsakdskahdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013中文dsakdskahdskahdk中文sahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahdksa中文hdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahdksahdkjashdsad中文jsajdlsajkl12389021中文0890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013";
+    _plainString = @"中文dsakdskahdskah中文dksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.164103201中文3dsakdskahdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdska中文hdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahd中文sahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.164103201中文3dsakdskahdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013中文dsakdskahdskahdk中文sahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahdksa中文hdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahdksahdkjashdsad中文jsajdlsajkl12389021中文0890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013";
 
 }
 - (IBAction)resetAll:(id)sender {
@@ -161,7 +161,7 @@
     }
 }
 
-#pragma mark ---公钥解密
+#pragma mark ---私钥加密&公钥解密
 
 - (IBAction)SecRefPrivateEncrypt:(id)sender {
     
@@ -169,7 +169,7 @@
         [self addlogText:@"无SecKey私钥"];
         return;
     }
-    // 不能以中文开头
+
     if (!_plainString) {
         [self addlogText:@"无明文数据"];
         return;
@@ -177,8 +177,7 @@
     
     NSData *plainData = [_plainString dataUsingEncoding:NSUTF8StringEncoding];
     
-    // 以解密的方式进行加密  padding 只能为kSecPaddingNone
-    NSData *cipherData = [_wrapper decryptWithKey:privateKeyRef cipherData:plainData padding:kSecPaddingNone];
+    NSData *cipherData = [_wrapper encryptWithPrivateKey:privateKeyRef plainData:plainData];
     _cipherString = [cipherData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
     NSString *logText = [NSString stringWithFormat:@"SecKey 私钥加密：\n%@",_cipherString];
     [self addlogText:logText];
@@ -332,7 +331,7 @@
     
     NSData *cipherData = [DDRSAWrapper openssl_encryptWithPrivateRSA:privateKey
                                                            plainData:plainData
-                                                             padding:RSA_NO_PADDING];
+                                                             padding:RSA_PKCS1_PADDING];
     
     _cipherString = [cipherData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
     NSString *logText = [NSString stringWithFormat:@"openssl 私钥加密：\n%@",_cipherString];
@@ -355,7 +354,7 @@
     
     NSData *plainData = [DDRSAWrapper openssl_decryptWithPublicKey:publicKey
                                                         cipherData:cipherData
-                                                           padding:RSA_NO_PADDING];
+                                                           padding:RSA_PKCS1_PADDING];
     
     NSString *outputPlainString = [[NSString alloc] initWithData:plainData encoding:NSUTF8StringEncoding];
     if ([outputPlainString isEqualToString:_plainString]) {
