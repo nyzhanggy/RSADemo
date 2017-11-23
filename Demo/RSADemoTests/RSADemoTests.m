@@ -64,7 +64,7 @@
     SecKeyRef publicKeyRef = NULL;
     SecKeyRef privateKeyRef = NULL;
     
-    for (NSInteger i = 0; i< 1000; i ++) {
+    for (NSInteger i = 0; i< 100; i ++) {
         BOOL result = [_wrapper generateSecKeyPairWithKeySize:1024 publicKeyRef:&publicKeyRef privateKeyRef:&privateKeyRef];
         NSAssert(result, @"生成密钥对失败");
         

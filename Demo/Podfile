@@ -5,3 +5,9 @@ target 'RSADemo' do
 pod 'OpenSSL', '~> 1.0.210'
 
 end
+
+
+target 'RSADemoTests' do
+pod 'OpenSSL', '~> 1.0.210'
+    
+end

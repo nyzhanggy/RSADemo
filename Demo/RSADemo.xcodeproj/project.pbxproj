@@ -16,6 +16,8 @@
 		1598A55C1E6961B30031D3A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1598A55A1E6961B30031D3A3 /* Main.storyboard */; };
 		1598A55E1E6961B30031D3A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1598A55D1E6961B30031D3A3 /* Assets.xcassets */; };
 		1598A5611E6961B30031D3A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1598A55F1E6961B30031D3A3 /* LaunchScreen.storyboard */; };
+		552B3499681C008FB80D08C8 /* libPods-RSADemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15660F451FC69E1900D70374 /* libPods-RSADemo.a */; };
+		6A175AE6733574BE58EB1DD9 /* libPods-RSADemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02F318A77AE4752B7FA03D61 /* libPods-RSADemoTests.a */; };
 		E87247D95CC0A4135CD59068 /* libPods-RSADemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C596D62BE0A6A4E17AB1DCF2 /* libPods-RSADemo.a */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		02F318A77AE4752B7FA03D61 /* libPods-RSADemoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RSADemoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D9E48D32FF0A85DB9680CE1 /* Pods-RSADemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSADemoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RSADemoTests/Pods-RSADemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1527BE821EBB077C006F839F /* DDRSAWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDRSAWrapper.h; sourceTree = "<group>"; };
 		1527BE831EBB077C006F839F /* DDRSAWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDRSAWrapper.m; sourceTree = "<group>"; };
 		15660F3A1FC6968300D70374 /* RSADemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RSADemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,6 +54,7 @@
 		1598A5621E6961B30031D3A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34B9001EB4200D5FA6DC1E45 /* Pods-RSADemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSADemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-RSADemo/Pods-RSADemo.release.xcconfig"; sourceTree = "<group>"; };
 		ABF24BEA1929FC1D1189FF5A /* Pods-RSADemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSADemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RSADemo/Pods-RSADemo.debug.xcconfig"; sourceTree = "<group>"; };
+		C2795FADA77069E91E6AC063 /* Pods-RSADemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSADemoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RSADemoTests/Pods-RSADemoTests.release.xcconfig"; sourceTree = "<group>"; };
 		C596D62BE0A6A4E17AB1DCF2 /* libPods-RSADemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RSADemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -58,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A175AE6733574BE58EB1DD9 /* libPods-RSADemoTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +72,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E87247D95CC0A4135CD59068 /* libPods-RSADemo.a in Frameworks */,
+				552B3499681C008FB80D08C8 /* libPods-RSADemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +150,8 @@
 			children = (
 				ABF24BEA1929FC1D1189FF5A /* Pods-RSADemo.debug.xcconfig */,
 				34B9001EB4200D5FA6DC1E45 /* Pods-RSADemo.release.xcconfig */,
+				0D9E48D32FF0A85DB9680CE1 /* Pods-RSADemoTests.debug.xcconfig */,
+				C2795FADA77069E91E6AC063 /* Pods-RSADemoTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -152,6 +161,7 @@
 			children = (
 				15660F451FC69E1900D70374 /* libPods-RSADemo.a */,
 				C596D62BE0A6A4E17AB1DCF2 /* libPods-RSADemo.a */,
+				02F318A77AE4752B7FA03D61 /* libPods-RSADemoTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -163,9 +173,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 15660F411FC6968300D70374 /* Build configuration list for PBXNativeTarget "RSADemoTests" */;
 			buildPhases = (
+				46E85078CF41EF7932B3364D /* [CP] Check Pods Manifest.lock */,
 				15660F361FC6968300D70374 /* Sources */,
 				15660F371FC6968300D70374 /* Frameworks */,
 				15660F381FC6968300D70374 /* Resources */,
+				7873A20EABABB14C91AB0E8F /* [CP] Embed Pods Frameworks */,
+				047680DF742BA5A047DB6AFB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -257,6 +270,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		047680DF742BA5A047DB6AFB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RSADemoTests/Pods-RSADemoTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		38DEC444A2130DC12346D79D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -269,6 +297,24 @@
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-RSADemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		46E85078CF41EF7932B3364D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RSADemoTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -288,6 +334,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RSADemo/Pods-RSADemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7873A20EABABB14C91AB0E8F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RSADemoTests/Pods-RSADemoTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9D6FBE922B4D58D427F29DF7 /* [CP] Embed Pods Frameworks */ = {
@@ -360,7 +421,7 @@
 /* Begin XCBuildConfiguration section */
 		15660F421FC6968300D70374 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ABF24BEA1929FC1D1189FF5A /* Pods-RSADemo.debug.xcconfig */;
+			baseConfigurationReference = 0D9E48D32FF0A85DB9680CE1 /* Pods-RSADemoTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -387,6 +448,7 @@
 		};
 		15660F431FC6968300D70374 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C2795FADA77069E91E6AC063 /* Pods-RSADemoTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -413,6 +475,7 @@
 		};
 		1598A5631E6961B30031D3A3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ABF24BEA1929FC1D1189FF5A /* Pods-RSADemo.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
