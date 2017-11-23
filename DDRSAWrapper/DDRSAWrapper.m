@@ -176,7 +176,7 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
     double totalLength = [plainData length];
     size_t blockSize = keySize - paddingSize;
     int blockCount = ceil(totalLength / blockSize);
-    NSMutableData *encryptDate = [NSMutableData data];
+    NSMutableData *encryptData = [NSMutableData data];
     for (int i = 0; i < blockCount; i++) {
         NSUInteger loc = i * blockSize;
         int dataSegmentRealSize = MIN(blockSize, totalLength - loc);
@@ -195,15 +195,15 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
                                );
         
         if(status == noErr){
-            NSData *encryptData = [[NSData alloc] initWithBytes:cipherBuffer length:cipherBufferSize];
-            [encryptDate appendData:encryptData];
+            NSData *resultData = [[NSData alloc] initWithBytes:cipherBuffer length:cipherBufferSize];
+            [encryptData appendData:resultData];
         } else {
             free(cipherBuffer);
             return nil;
         }
         free(cipherBuffer);
     }
-    return encryptDate;
+    return encryptData;
 }
 - (NSData *)decryptWithKey:(SecKeyRef)key cipherData:(NSData *)cipherData padding:(SecPadding)padding {
     if (!key) {
