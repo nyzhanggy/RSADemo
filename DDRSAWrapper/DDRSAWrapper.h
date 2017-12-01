@@ -13,7 +13,9 @@
 - (NSData *)privateKeyBitsFromSecKey:(SecKeyRef)givenKey;
 - (SecKeyRef)privateSecKeyFromKeyBits:(NSData *)givenData;
 
-
+/*
+ padding ： kSecPaddingNone 或 kSecPaddingPKCS1
+ */
 - (NSData *)encryptWithKey:(SecKeyRef)key plainData:(NSData *)plainData padding:(SecPadding)padding;
 - (NSData *)decryptWithKey:(SecKeyRef)key cipherData:(NSData *)cipherData padding:(SecPadding)padding;
 

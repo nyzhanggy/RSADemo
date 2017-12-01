@@ -57,6 +57,30 @@
         NSAssert([outputPlainString isEqualToString:_plainString], @"公钥加密私钥解密失败");
     }
 }
+
+- (void)test_SecRef_PubcliKeyEncryptAndPrivateKeyDecrypt_BiggerThanModuleData {
+    for (NSInteger i = 0; i< 100; i ++) {
+        SecKeyRef publicKeyRef = NULL;
+        SecKeyRef privateKeyRef = NULL;
+        
+        BOOL result = [_wrapper generateSecKeyPairWithKeySize:1024 publicKeyRef:&publicKeyRef privateKeyRef:&privateKeyRef];
+        NSAssert(result, @"生成密钥对失败");
+        NSData *pd = [_wrapper publicKeyBitsFromSecKey:publicKeyRef];
+        
+        NSData *moduleData = [[_wrapper getPublicKeyMod:pd] subdataWithRange:NSMakeRange(1, 127)];
+        
+        const char fixByte = 0xff;
+        NSMutableData * biggerThanModuleData = [NSMutableData dataWithBytes:&fixByte length:1];
+        [biggerThanModuleData appendData:moduleData];
+        
+        NSData *cipherData = [_wrapper encryptWithKey:publicKeyRef plainData:biggerThanModuleData padding:kSecPaddingNone];
+        NSData *resultData = [_wrapper decryptWithKey:privateKeyRef cipherData:cipherData padding:kSecPaddingNone];
+        
+        NSAssert([resultData isEqualToData:biggerThanModuleData], @"公钥加密私钥解密失败");
+    }
+    
+}
+
 /*
  私钥加密公钥解密
  */

@@ -166,12 +166,10 @@ static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdenti
         return nil;
     }
     
-    size_t paddingSize = 0;
+    size_t paddingSize = 1; // 防止明文大于模数
     if (padding == kSecPaddingPKCS1) {
         paddingSize = 11;
-    } else if (padding == kSecPaddingOAEP) {
-        paddingSize = 41;
-    }
+    } 
     size_t keySize = SecKeyGetBlockSize(key) * sizeof(uint8_t);
     double totalLength = [plainData length];
     size_t blockSize = keySize - paddingSize;
