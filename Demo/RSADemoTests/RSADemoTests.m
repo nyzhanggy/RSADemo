@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <openssl/rsa.h>
+#import <CommonCrypto/CommonDigest.h>
 #import "DDRSAWrapper.h"
 #import "DDRSAWrapper+openssl.h"
 
@@ -103,6 +104,42 @@
         NSAssert([outputPlainString isEqualToString:_plainString], @"私钥加密公钥解密失败");
     }
 
+}
+
+
+/*
+ 签名与验签
+ */
+- (void)test_SecRef_sign {
+    SecKeyRef publicKeyRef = NULL;
+    SecKeyRef privateKeyRef = NULL;
+    
+    BOOL result = [_wrapper generateSecKeyPairWithKeySize:2048 publicKeyRef:&publicKeyRef privateKeyRef:&privateKeyRef];
+    NSAssert(result, @"生成密钥对失败");
+    size_t keySize = SecKeyGetBlockSize(privateKeyRef) * sizeof(uint8_t);
+    
+    NSData *plainData = [_plainString dataUsingEncoding:NSUTF8StringEncoding];
+    size_t hashBytesSize = CC_SHA256_DIGEST_LENGTH;
+    uint8_t* hashBytes = malloc(hashBytesSize);
+    
+    unsigned char *r = CC_SHA256([plainData bytes], (CC_LONG)[plainData length], hashBytes);
+    NSAssert(r, @"sha 失败");
+    
+    unsigned char *signedHashBytes = malloc(keySize);
+    memset(signedHashBytes, 0, keySize);
+    size_t signedHashBytesSize = keySize;
+    
+    OSStatus status = SecKeyRawSign(privateKeyRef, kSecPaddingPKCS1SHA1, hashBytes, hashBytesSize, signedHashBytes, &signedHashBytesSize);
+    
+    NSAssert(status == noErr, @"签名失败");
+    
+    NSData *resultData = [[NSData alloc] initWithBytes:signedHashBytes length:signedHashBytesSize];
+    free(signedHashBytes);
+    
+    status = SecKeyRawVerify(publicKeyRef, kSecPaddingPKCS1SHA1,  hashBytes, hashBytesSize, [resultData bytes], [resultData length]);
+    
+    NSAssert(status == noErr, @"验签失败");
+    
 }
 
 /*
