@@ -108,7 +108,8 @@
     BUF_MEM *bptr;
     BIO_get_mem_ptr(bio, &bptr);
     
-    NSString *pemString = [NSString stringWithFormat:@"%s",bptr->data];
+    // data 后面可能会有有脏数据
+    NSString *pemString = [[NSString stringWithFormat:@"%s",bptr->data] substringToIndex:bptr->length];
     BIO_set_close(bio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
     BIO_free(bio);
     return [self base64EncodedFromPEMFormat:pemString];
@@ -127,8 +128,8 @@
     BUF_MEM *bptr;
     BIO_get_mem_ptr(bio, &bptr);
     
-    NSString *pemString = [NSString stringWithFormat:@"%s",bptr->data];
-    
+    // data 后面可能会有有脏数据
+    NSString *pemString = [[NSString stringWithFormat:@"%s",bptr->data] substringToIndex:bptr->length];
     BIO_set_close(bio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
     BIO_free(bio);
     
@@ -171,9 +172,6 @@
         free(publicEncrypt);
     }
     return encryptDate;
-    
-    
-    
 }
 
 + (NSData *)openssl_decryptWithPrivateKey:(RSA *)privateKey cipherData:(NSData *)cipherData padding:(int)padding{
