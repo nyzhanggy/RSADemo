@@ -22,5 +22,7 @@ BASE64 ENCODED DATA
 -----END PRIVATE KEY-----
 ```
 
+PKCS#1结构仅为RSA设计。X509,SSL支持的算法不仅仅是RSA，因此产生了更具有通用性的PKCS#8
 
 https://tls.mbed.org/kb/cryptography/asn1-key-structures-in-der-and-pem
+https://medium.com/@oyrxx/rsa秘钥介绍及openssl生成命令-d3fcc689513f
