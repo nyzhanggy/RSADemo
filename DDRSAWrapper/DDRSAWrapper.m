@@ -47,114 +47,43 @@
 static NSString * const kTransfromIdenIdentifierPublic = @"kTransfromIdenIdentifierPublic";
 static NSString * const kTransfromIdenIdentifierPrivate = @"kTransfromIdenIdentifierPrivate";
 - (NSData *)publicKeyBitsFromSecKey:(SecKeyRef)givenKey {
-	
-	NSData *peerTag = [kTransfromIdenIdentifierPublic dataUsingEncoding:NSUTF8StringEncoding];
-	
-	OSStatus sanityCheck = noErr;
-	NSData * keyBits = nil;
-	
-	NSMutableDictionary * queryKey = [[NSMutableDictionary alloc] init];
-	[queryKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-    [queryKey setObject:(id)kSecAttrKeyClassPublic forKey:(id)kSecAttrKeyClass];
-	[queryKey setObject:peerTag forKey:(__bridge id)kSecAttrApplicationTag];
-    
-    [queryKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    
-	[queryKey setObject:(__bridge id)givenKey forKey:(__bridge id)kSecValueRef];
-	[queryKey setObject:@YES forKey:(__bridge id)kSecReturnData];
-    
-	
-	
-	CFTypeRef result;
-	sanityCheck = SecItemAdd((__bridge CFDictionaryRef) queryKey, &result);
-	if (sanityCheck == errSecSuccess) {
-		keyBits = CFBridgingRelease(result);
-		
-		(void)SecItemDelete((__bridge CFDictionaryRef) queryKey);
-	}
-	
-	return keyBits;
+
+    return (NSData*)CFBridgingRelease(SecKeyCopyExternalRepresentation(givenKey, NULL));
 }
 
 - (SecKeyRef)publicSecKeyFromKeyBits:(NSData *)givenData {
-	
-	NSData *peerTag = [kTransfromIdenIdentifierPublic dataUsingEncoding:NSUTF8StringEncoding];
-	
+    NSMutableDictionary *options = [NSMutableDictionary dictionary];
+    options[(__bridge id)kSecAttrKeyType] = (__bridge id) kSecAttrKeyTypeRSA;
+    options[(__bridge id)kSecAttrKeyClass] = (__bridge id) kSecAttrKeyClassPublic;
+
+    NSError *error = nil;
+    CFErrorRef ee = (__bridge CFErrorRef)error;
     
-	OSStatus sanityCheck = noErr;
-	SecKeyRef secKey = nil;
-	
-	NSMutableDictionary * queryKey = [[NSMutableDictionary alloc] init];
-	[queryKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-	[queryKey setObject:peerTag forKey:(__bridge id)kSecAttrApplicationTag];
-    [queryKey setObject:(id)kSecAttrKeyClassPublic forKey:(id)kSecAttrKeyClass];
-    
-	[queryKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-	
-    [queryKey setObject:givenData forKey:(__bridge id)kSecValueData];
-	[queryKey setObject:@YES forKey:(__bridge id)kSecReturnRef];
-	
-    (void)SecItemDelete((__bridge CFDictionaryRef) queryKey);
-    
-	CFTypeRef result;
-	sanityCheck = SecItemAdd((__bridge CFDictionaryRef) queryKey, &result);
-	if (sanityCheck == errSecSuccess) {
-		secKey = (SecKeyRef)result;
-	}
-	
-	return secKey;
+    SecKeyRef ret = SecKeyCreateWithData((__bridge CFDataRef)givenData, (__bridge CFDictionaryRef)options, &ee);
+    if (error) {
+        return nil;
+    }
+    return ret;
 }
 
 - (NSData *)privateKeyBitsFromSecKey:(SecKeyRef)givenKey {
-	
-	NSData *peerTag = [kTransfromIdenIdentifierPrivate dataUsingEncoding:NSUTF8StringEncoding];
-	
-	OSStatus sanityCheck = noErr;
-	NSData * keyBits = nil;
-	
-	NSMutableDictionary * queryKey = [[NSMutableDictionary alloc] init];
-	[queryKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-	[queryKey setObject:peerTag forKey:(__bridge id)kSecAttrApplicationTag];
-	[queryKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-	[queryKey setObject:(id)kSecAttrKeyClassPrivate forKey:(id)kSecAttrKeyClass];
-	
-	[queryKey setObject:(__bridge id)givenKey forKey:(__bridge id)kSecValueRef];
-	[queryKey setObject:@YES forKey:(__bridge id)kSecReturnData];
-	CFTypeRef result;
-	sanityCheck = SecItemAdd((__bridge CFDictionaryRef) queryKey, &result);
-	if (sanityCheck == errSecSuccess) {
-		keyBits = CFBridgingRelease(result);
-		
-		(void)SecItemDelete((__bridge CFDictionaryRef) queryKey);
-	}
-	
-	return keyBits;
+	return (NSData*)CFBridgingRelease(SecKeyCopyExternalRepresentation(givenKey, NULL));
 }
 
 - (SecKeyRef)privateSecKeyFromKeyBits:(NSData *)givenData {
 	
-	NSData *peerTag = [kTransfromIdenIdentifierPrivate dataUsingEncoding:NSUTF8StringEncoding];
-	
-	OSStatus sanityCheck = noErr;
-	SecKeyRef secKey = nil;
-	
-	NSMutableDictionary * queryKey = [[NSMutableDictionary alloc] init];
-	[queryKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-	[queryKey setObject:peerTag forKey:(__bridge id)kSecAttrApplicationTag];
-	[queryKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-	[queryKey setObject:(id)kSecAttrKeyClassPrivate forKey:(id)kSecAttrKeyClass];
-	[queryKey setObject:givenData forKey:(__bridge id)kSecValueData];
-	[queryKey setObject:@YES forKey:(__bridge id)kSecReturnRef];
-	
-	CFTypeRef result;
-	sanityCheck = SecItemAdd((__bridge CFDictionaryRef) queryKey, &result);
-	if (sanityCheck == errSecSuccess) {
-		secKey = (SecKeyRef)result;
-		
-		(void)SecItemDelete((__bridge CFDictionaryRef) queryKey);
-	}
-	
-	return secKey;
+    NSMutableDictionary *options = [NSMutableDictionary dictionary];
+    options[(__bridge id)kSecAttrKeyType] = (__bridge id) kSecAttrKeyTypeRSA;
+    options[(__bridge id)kSecAttrKeyClass] = (__bridge id) kSecAttrKeyClassPrivate;
+    
+    NSError *error = nil;
+    CFErrorRef ee = (__bridge CFErrorRef)error;
+    
+    SecKeyRef ret = SecKeyCreateWithData((__bridge CFDataRef)givenData, (__bridge CFDictionaryRef)options, &ee);
+    if (error) {
+        return nil;
+    }
+    return ret;
 }
 
 #pragma mark ---加解密
