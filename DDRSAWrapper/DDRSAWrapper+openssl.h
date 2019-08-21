@@ -30,5 +30,6 @@
 
 + (RSA *)openssl_publicKeyFormMod:(NSString *)mod exp:(NSString *)exp;
 + (char *)openssl_expFromPublicKey:(RSA *)publicKey;
-+ (char *)openssl_modFromPublicKey:(RSA *)publicKey;
++ (char *)openssl_expFromPrivateKey:(RSA *)privateKey;
++ (char *)openssl_modFromKey:(RSA *)key;
 @end

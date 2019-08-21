@@ -6,6 +6,7 @@
 #import "ViewController.h"
 #import "DDRSAWrapper.h"
 #import "DDRSAWrapper+openssl.h"
+
 @interface ViewController (){
 	
 	RSA *publicKey;
@@ -38,10 +39,13 @@
     
     _wrapper = [[DDRSAWrapper alloc] init];
     
-    
-    _plainString = @"中文dsakdskahdskah中文dksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.164103201中文3dsakdskahdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdska中文hdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahd中文sahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.164103201中文3dsakdskahdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013中文dsakdskahdskahdk中文sahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahdksa中文hdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahdksahdkjashdsad中文jsajdlsajkl12389021中文0890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013";
 
+    _plainString = @"中文dsakdskahdskah中文dksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.164103201中文3dsakdskahdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdska中文hdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahd中文sahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.164103201中文3dsakdskahdskahdksahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013中文dsakdskahdskahdk中文sahdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahdksa中文hdkjashdsadjsajdlsajkl123890210890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013dsakdskahdskahdksahdkjashdsad中文jsajdlsajkl12389021中文0890%&*(*()_@#$%^&*()*&^%$hjdksakdhksjhkfhjsk0.1641032013";
+    
 }
+
+
+
 - (IBAction)resetAll:(id)sender {
 
 	publicKey = nil;
@@ -213,15 +217,16 @@
 - (IBAction)opensslGenerate{
     if ([DDRSAWrapper generateRSAKeyPairWithKeySize:2048 publicKey:&publicKey privateKey:&privateKey]) {
         
-        char * m = [DDRSAWrapper openssl_modFromPublicKey:publicKey];
-        char * e = [DDRSAWrapper openssl_expFromPublicKey:publicKey];;
+        char * m = [DDRSAWrapper openssl_modFromKey:publicKey];
+        char * e = [DDRSAWrapper openssl_expFromPublicKey:publicKey];
+        char * d = [DDRSAWrapper openssl_expFromPrivateKey:privateKey];
         
         _publicKeyBase64 = [DDRSAWrapper base64EncodedStringPublicKey:publicKey];
         _privateKeyBase64 = [DDRSAWrapper base64EncodedStringPrivateKey:privateKey];
         NSLog(@"%@",_publicKeyBase64);
         NSLog(@"%@",_privateKeyBase64);
         
-        NSString *logText = [NSString stringWithFormat:@"openssl 生成密钥成功！\n公钥-----\n模数：%s\n指数：%s\n-------",m,e];
+        NSString *logText = [NSString stringWithFormat:@"openssl 生成密钥成功！\n模数：%s\n公钥指数：%s\n私钥指数：%s",m,e,d];
         [self addlogText:logText];
     }
 }

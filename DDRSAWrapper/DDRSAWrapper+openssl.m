@@ -316,7 +316,10 @@
 + (char *)openssl_expFromPublicKey:(RSA *)publicKey {
     return  BN_bn2hex(publicKey->e);
 }
-+ (char *)openssl_modFromPublicKey:(RSA *)publicKey {
-    return  BN_bn2hex(publicKey->n);
++ (char *)openssl_expFromPrivateKey:(RSA *)privateKey {
+    return  BN_bn2hex(privateKey->d);
+}
++ (char *)openssl_modFromKey:(RSA *)key {
+    return  BN_bn2hex(key->n);
 }
 @end
