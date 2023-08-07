@@ -17,7 +17,8 @@
         if (rsa) {
             *privateKey = RSAPrivateKey_dup(rsa);
             *publicKey = RSAPublicKey_dup(rsa);
-            if (publicKey && privateKey) {
+            RSA_free(rsa); // 释放 RSA_generate_key 分配的内存
+            if (*publicKey && *privateKey) {
                 return YES;
             }
         }
